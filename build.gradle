@@ -1,0 +1,75 @@
+buildscript {
+	repositories {
+		mavenCentral()
+		mavenLocal()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.5.RELEASE")
+		classpath 'io.spring.gradle:dependency-management-plugin:0.5.2.RELEASE'
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'war'
+
+dependencyManagement {
+	imports {
+		mavenBom 'io.spring.platform:platform-bom:1.1.1.RELEASE'
+	}
+}
+
+jar {
+	baseName = 'cxtx'
+	version = '0.0.1-SNAPSHOT'
+}
+
+war {
+	baseName = 'cxtx'
+	version = '0.0.1-SNAPSHOT'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+
+dependencies {
+	compile ("org.springframework.boot:spring-boot-starter-web",
+			"org.springframework.boot:spring-boot-starter-data-jpa",
+			"org.springframework.boot:spring-boot-starter-aop",
+			"mysql:mysql-connector-java:5.1.26",
+			"commons-io:commons-io",
+			"org.hibernate:hibernate-core",
+			"org.hibernate.javax.persistence:hibernate-jpa-2.1-api",
+			"com.fasterxml.jackson.core:jackson-annotations",
+			"commons-net:commons-net:3.5",
+			"org.apache.poi:poi:3.9",
+			"org.apache.poi:poi-ooxml:3.9",
+			"org.apache.poi:poi-scratchpad:3.9",
+			"org.apache.commons:commons-compress:1.12",
+			"com.artofsolving:jodconverter:2.2.1",
+			"org.apache.httpcomponents:httpclient:4.5.2",
+			"com.alibaba:fastjson:1.2.7"
+	)
+
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+
+	testCompile("junit:junit")
+
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '2.1'
+}
+
+task copyJars(type: Copy) {
+	from configurations.runtime
+	into '/test/' // 目标位置
+}

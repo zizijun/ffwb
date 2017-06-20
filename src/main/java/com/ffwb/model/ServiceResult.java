@@ -1,4 +1,4 @@
-package com.cxtx.model;
+package com.ffwb.model;
 
 /**
  * Created by jinchuyang on 16/10/19.

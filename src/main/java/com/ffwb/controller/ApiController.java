@@ -1,6 +1,6 @@
-package com.cxtx.controller;
+package com.ffwb.controller;
 
-import com.cxtx.exception.ParameterInvalidException;
+import com.ffwb.exception.ParameterInvalidException;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**

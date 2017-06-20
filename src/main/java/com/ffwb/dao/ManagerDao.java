@@ -1,6 +1,6 @@
-package com.cxtx.dao;
+package com.ffwb.dao;
 
-import com.cxtx.entity.Manager;
+import com.ffwb.entity.Manager;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

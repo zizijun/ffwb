@@ -1,16 +1,16 @@
-package com.cxtx.controller;
+package com.ffwb.controller;
 
-import com.cxtx.entity.Manager;
-import com.cxtx.model.ServiceResult;
-import com.cxtx.service.ManagerService;
+import com.ffwb.entity.Manager;
+import com.ffwb.model.ServiceResult;
+import com.ffwb.service.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * Created by jinchuyang on 16/10/19.
  */
+@Controller
 public class ManagerController extends ApiController{
     @Autowired
     private ManagerService managerService;

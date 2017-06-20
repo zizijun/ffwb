@@ -1,4 +1,4 @@
-package com.cxtx.exception;
+package com.ffwb.exception;
 
 /**
  * Created by jinchuyang on 16/10/19.

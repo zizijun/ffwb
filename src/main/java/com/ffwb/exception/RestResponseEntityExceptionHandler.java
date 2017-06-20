@@ -1,10 +1,10 @@
-package com.cxtx.exception;
+package com.ffwb.exception;
 
 /**
  * Created by jinchuyang on 16/10/19.
  */
 
-import com.cxtx.model.ServiceResult;
+import com.ffwb.model.ServiceResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

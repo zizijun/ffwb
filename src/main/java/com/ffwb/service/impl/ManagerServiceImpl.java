@@ -1,8 +1,8 @@
-package com.cxtx.service.impl;
+package com.ffwb.service.impl;
 
-import com.cxtx.dao.ManagerDao;
-import com.cxtx.entity.Manager;
-import com.cxtx.service.ManagerService;
+import com.ffwb.dao.ManagerDao;
+import com.ffwb.entity.Manager;
+import com.ffwb.service.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

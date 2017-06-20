@@ -1,4 +1,4 @@
-package com.cxtx.hello;
+package com.ffwb.hello;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -14,15 +14,15 @@ import org.springframework.data.web.config.EnableSpringDataWebSupport;
 @EnableAutoConfiguration
 @ComponentScan(
 		basePackages = {
-				"com.cxtx.controller",
-				"com.cxtx.service",
-				"com.cxtx.aop",
-				"com.cxtx.filter"})
+				"com.ffwb.controller",
+				"com.ffwb.service",
+				"com.ffwb.aop",
+				"com.ffwb.filter"})
 @ImportResource("classpath:extra-beans.xml")
 @EnableSpringDataWebSupport
 @SpringBootApplication
 @EnableJpaRepositories
-@EntityScan(basePackages = {"com.cxtx.entity"})
+@EntityScan(basePackages = {"com.ffwb.entity"})
 public class Application extends SpringBootServletInitializer {
 
 	/**

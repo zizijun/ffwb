@@ -1,6 +1,6 @@
-package com.cxtx.service;
+package com.ffwb.service;
 
-import com.cxtx.entity.Manager;
+import com.ffwb.entity.Manager;
 
 /**
  * Created by jinchuyang on 16/10/19.

@@ -1,4 +1,4 @@
-package com.cxtx.entity;
+package com.ffwb.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -44,6 +44,11 @@ public class Manager {
      */
     @Column
     private double money;
+
+    /**
+     * 头像
+     */
+    private String headUrl;
 
     private int alive;
 

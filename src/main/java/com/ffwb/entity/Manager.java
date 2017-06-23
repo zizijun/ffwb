@@ -34,22 +34,9 @@ public class Manager {
     private String password;
 
     /**
-     * 级别
+     * 是否存在
      */
     @Column
-    private int lever;
-
-    /**
-     * 系统账户总额
-     */
-    @Column
-    private double money;
-
-    /**
-     * 头像
-     */
-    private String headUrl;
-
     private int alive;
 
     public Long getId() {
@@ -84,21 +71,6 @@ public class Manager {
         this.password = password;
     }
 
-    public int getLever() {
-        return lever;
-    }
-
-    public void setLever(int lever) {
-        this.lever = lever;
-    }
-
-    public double getMoney() {
-        return money;
-    }
-
-    public void setMoney(double money) {
-        this.money = money;
-    }
 
     public int getAlive() {
         return alive;

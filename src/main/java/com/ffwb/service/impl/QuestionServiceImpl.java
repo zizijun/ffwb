@@ -1,9 +1,11 @@
 package com.ffwb.service.impl;
 
+import com.ffwb.DTO.QuestionDTO;
 import com.ffwb.dao.ManagerDao;
 import com.ffwb.dao.QuestionDao;
 import com.ffwb.entity.Manager;
 import com.ffwb.entity.Question;
+import com.ffwb.model.PageListModel;
 import com.ffwb.service.QuestionService;
 import com.ffwb.utils.ExcelReader;
 import com.ffwb.utils.JsonType;
@@ -12,10 +14,12 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.text.html.parser.Entity;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -69,7 +73,7 @@ public class QuestionServiceImpl implements QuestionService {
             //标签
             cell = row.getCell(2);
             cell.setCellType(Cell.CELL_TYPE_STRING);
-            question.setLabel(cell.getStringCellValue());
+            question.setType(cell.getStringCellValue());
             //option
             cell = row.getCell(3);
             if (cell!= null && cell.getStringCellValue() != null){
@@ -89,5 +93,39 @@ public class QuestionServiceImpl implements QuestionService {
         }
         //questionDao.save(questions);
         return questions.size();
+    }
+
+    /**
+     * 获取所有alive为1的问题
+     * @return
+     * @param pageIndex
+     * @param pageSize
+     * @param sortField
+     * @param sortOrder
+     */
+    @Override
+    public PageListModel getAllQuestions(int pageIndex, int pageSize, String sortField, String sortOrder) {
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (sortOrder.toUpperCase().equals("DESC")) {
+            direction = Sort.Direction.DESC;
+        }
+        Sort sort = new Sort(direction, sortField);
+        Page<Question> questions = questionDao.findByAlive(1, new PageRequest(pageIndex, pageSize, new Sort(Sort.Direction.ASC, sortField)));
+        List<QuestionDTO> questionDTOList = new ArrayList<QuestionDTO>();
+        for (Question question :questions){
+            QuestionDTO dto = new QuestionDTO();
+            dto.setId(question.getId());
+            dto.setDescription(question.getDescription());
+            dto.setSolution(question.getSolution());
+            dto.setType(question.getType());
+            if(question.getOptionJson() != null){
+                Map map = JsonType.getData(question.getOptionJson());
+                dto.setOptionJson(map);
+            }
+            questionDTOList.add(dto);
+        }
+        PageListModel pageListModel = PageListModel.Builder().pageIndex(pageIndex).pageSize(pageSize).
+                totalCount(questions.getTotalElements()).totalPage(questions.getTotalPages()).list(questionDTOList).build();
+        return pageListModel;
     }
 }

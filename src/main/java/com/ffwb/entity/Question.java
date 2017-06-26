@@ -38,6 +38,12 @@ public class Question {
      * 类型
      */
     @Column
+    private String type;
+
+    /**
+     * 标签
+     */
+    @Column
     private String label;
 
     /**
@@ -103,5 +109,13 @@ public class Question {
 
     public void setAlive(int alive) {
         this.alive = alive;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

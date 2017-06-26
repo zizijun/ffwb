@@ -23,7 +23,7 @@ public class JsonType {
     }
 
     //{"pass":"4355","name":"12342","wang":"fsf"}
-    public Map  getData(String str){
+    public static Map getData(String str){
         String sb = str.substring(1, str.length()-1);
         String[] name =  sb.split("\\\",\\\"");
         String[] nn =null;

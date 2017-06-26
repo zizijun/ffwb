@@ -79,7 +79,7 @@ public class QuestionServiceImpl implements QuestionService {
             if (cell!= null && cell.getStringCellValue() != null){
                 Map<String, String> options = new HashMap<String, String>();
                 for (int j = 3; j < 7;j++){
-                    cell = row.getCell(3);
+                    cell = row.getCell(j);
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     Character ch  = (char) (62+j);
                     options.put(ch.toString(),cell.getStringCellValue());

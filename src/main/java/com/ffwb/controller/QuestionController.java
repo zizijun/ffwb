@@ -21,6 +21,13 @@ public class QuestionController extends ApiController{
     @Autowired
     private QuestionService questionService;
 
+    /**
+     * 上传试题 试题存在excel之中
+     * @param file
+     * @param managerId
+     * @return
+     * @throws IOException
+     */
     @RequestMapping(value = "/question/upload", method = RequestMethod.POST)
     @ResponseBody
     public ServiceResult uploadQuestion(@RequestParam(value = "file")MultipartFile file,

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.text.html.parser.Entity;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class QuestionServiceImpl implements QuestionService {
     private QuestionDao questionDao;
     @Autowired
     private ManagerDao managerDao;
+
     /**
      * 上传试卷 试题
      * @param multipartFile
@@ -72,20 +74,20 @@ public class QuestionServiceImpl implements QuestionService {
             cell = row.getCell(3);
             if (cell!= null && cell.getStringCellValue() != null){
                 Map<String, String> options = new HashMap<String, String>();
-                for (int j = 3; j < 4;j++){
+                for (int j = 3; j < 7;j++){
                     cell = row.getCell(3);
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     Character ch  = (char) (62+j);
                     options.put(ch.toString(),cell.getStringCellValue());
                 }
+
                 question.setOptionJson(JsonType.simpleMapToJsonStr(options));
             }
             question.setAlive(1);
             questions.add(question);
-            question = questionDao.save(question);
-            System.out.println(question.getId()+"============");
+            questionDao.save(question);
         }
         //questionDao.save(questions);
-        return questionDao.save(questions).size();
+        return questions.size();
     }
 }

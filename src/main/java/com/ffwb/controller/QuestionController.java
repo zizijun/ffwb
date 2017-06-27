@@ -52,7 +52,7 @@ public class QuestionController extends ApiController{
      * 获取所有的试题(分页操作)
      * @return
      */
-    @RequestMapping(value = "/questions/getAll", method = RequestMethod.GET)
+    @RequestMapping(value = "/questions/all", method = RequestMethod.GET)
     @ResponseBody
     public ServiceResult getAllQuestions(@RequestParam(value="pageIndex", defaultValue="0") int pageIndex,
                                          @RequestParam(value="pageSize", defaultValue="10") int pageSize,
@@ -63,6 +63,18 @@ public class QuestionController extends ApiController{
         return ServiceResult.success(questions);
     }
 
+    /**
+     * 根据条件搜索问题
+     * @param label
+     * @param type
+     * @param pageIndex
+     * @param pageSize
+     * @param sortField
+     * @param sortOrder
+     * @return
+     */
+    @RequestMapping(value = "/questions/search", method = RequestMethod.GET)
+    @ResponseBody
     public ServiceResult getQuestionsByConditions(@RequestParam(value = "label", defaultValue = "") String label,
                                                   @RequestParam(value = "type", defaultValue = "")String type,
                                                   @RequestParam(value="pageIndex", defaultValue="0") int pageIndex,
@@ -70,7 +82,9 @@ public class QuestionController extends ApiController{
                                                   @RequestParam(value="sortField", defaultValue="id") String sortField,
                                                   @RequestParam(value="sortOrder", defaultValue="ASC") String sortOrder){
         //TODO
-        return ServiceResult.success(null);
+        System.out.println("label: "+label +"   "+"type:"+type);
+        PageListModel questions = questionService.getQuestionsByConditions(label, type, pageIndex, pageSize, sortField, sortOrder);
+        return ServiceResult.success(questions);
     }
 
 }

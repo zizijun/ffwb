@@ -17,9 +17,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -110,7 +116,68 @@ public class QuestionServiceImpl implements QuestionService {
             direction = Sort.Direction.DESC;
         }
         Sort sort = new Sort(direction, sortField);
-        Page<Question> questions = questionDao.findByAlive(1, new PageRequest(pageIndex, pageSize, new Sort(Sort.Direction.ASC, sortField)));
+        Page<Question> questions = questionDao.findByAlive(1, new PageRequest(pageIndex, pageSize, sort));
+        //pojo2dto
+        List<QuestionDTO> questionDTOList = pojo2Dto(questions);
+        PageListModel pageListModel = PageListModel.Builder().pageIndex(pageIndex).pageSize(pageSize).
+                totalCount(questions.getTotalElements()).totalPage(questions.getTotalPages()).list(questionDTOList).build();
+        return pageListModel;
+    }
+
+    /**
+     * 根据条件搜索问题
+     * @param label
+     * @param type
+     * @param pageIndex
+     * @param pageSize
+     * @param sortField
+     * @param sortOrder
+     * @return
+     */
+    @Override
+    public PageListModel getQuestionsByConditions(String label, String type, int pageIndex, int pageSize, String sortField, String sortOrder) {
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (sortOrder.toUpperCase().equals("DESC")) {
+            direction = Sort.Direction.DESC;
+        }
+        Sort sort = new Sort(direction, sortField);
+
+        Specification<Question> specification = this.buildSpecifications(label,type);
+        Page<Question> questions = questionDao.findAll(Specifications.where(specification), new PageRequest(pageIndex, pageSize, sort));
+
+        List<QuestionDTO> questionDTOList = pojo2Dto(questions);
+        PageListModel pageListModel = PageListModel.Builder().pageIndex(pageIndex).pageSize(pageSize).
+                totalCount(questions.getTotalElements()).totalPage(questions.getTotalPages()).list(questionDTOList).build();
+        return pageListModel;
+    }
+
+    private Specification<Question> buildSpecifications(String label, String type){
+        final String fLabel = label;
+        final String fType = type;
+
+        Specification<Question> specification = new Specification<Question>(){
+            @Override
+            public Predicate toPredicate(Root<Question> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                Predicate predicate = criteriaBuilder.conjunction();
+                if(null!=fType && !"".equals(fType)){
+                    predicate.getExpressions().add(criteriaBuilder.equal(root.get("type"),fType));
+                }
+                if(null!=fLabel && !"".equals(fLabel)){
+                    predicate.getExpressions().add(criteriaBuilder.equal(root.get("label"),fLabel));
+                }
+                return criteriaBuilder.and(predicate);
+            }
+
+        };
+        return specification;
+    }
+
+    /**
+     * pojo2dto
+     * @param questions
+     * @return
+     */
+    private List<QuestionDTO> pojo2Dto(Page<Question> questions) {
         List<QuestionDTO> questionDTOList = new ArrayList<QuestionDTO>();
         for (Question question :questions){
             QuestionDTO dto = new QuestionDTO();
@@ -124,8 +191,6 @@ public class QuestionServiceImpl implements QuestionService {
             }
             questionDTOList.add(dto);
         }
-        PageListModel pageListModel = PageListModel.Builder().pageIndex(pageIndex).pageSize(pageSize).
-                totalCount(questions.getTotalElements()).totalPage(questions.getTotalPages()).list(questionDTOList).build();
-        return pageListModel;
+        return questionDTOList;
     }
 }

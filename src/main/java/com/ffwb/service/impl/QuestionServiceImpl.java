@@ -151,6 +151,73 @@ public class QuestionServiceImpl implements QuestionService {
         return pageListModel;
     }
 
+    @Override
+    public boolean labelQuestions(List<QuestionDTO> dto) {
+        for(QuestionDTO q:dto){
+            Question question=questionDao.findOne(q.getId());
+            List<String> label=q.getLabel();
+            String nlabel="";
+            for(String l:label)
+                nlabel+=l+" ";                //以空格分割label
+            question.setLabel(nlabel);
+            questionDao.save(question);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean updateQuestions(List<QuestionDTO> dto) {
+        for(QuestionDTO q:dto){
+            Question question=questionDao.findOne(q.getId());
+            List<String> label=q.getLabel();
+            String nlabel="";
+            for(String l:label)
+                nlabel+=l+" ";                //以空格分割label
+            question.setLabel(nlabel);
+            question.setDescription(q.getDescription());
+            question.setType(q.getType());
+            question.setSolution(q.getSolution());
+            if(q.getOptionJson()!=null){
+                question.setOptionJson(JsonType.simpleMapToJsonStr(q.getOptionJson()));
+            }
+            questionDao.save(question);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean addQuestions(QuestionDTO q,Long managerId) {
+        Question question=new Question();
+        question.setDescription(q.getDescription());
+        question.setSolution(q.getSolution());
+        question.setType(q.getType());
+        Manager manager=managerDao.findOne(managerId);
+        if(manager!=null)
+            question.setManager(manager);
+        else return false;
+        question.setAlive(1);
+        List<String> label=q.getLabel();
+        String nlabel="";
+        for(String l:label)
+            nlabel+=l+" ";                //以空格分割label
+        question.setLabel(nlabel);
+        if(q.getOptionJson()!=null){
+            question.setOptionJson(JsonType.simpleMapToJsonStr(q.getOptionJson()));
+        }
+        questionDao.save(question);
+        return true;
+    }
+
+    @Override
+    public boolean deleteQuestions(List<QuestionDTO> dto) {
+        for(QuestionDTO q:dto){
+            Question question=questionDao.findOne(q.getId());
+            if(question!=null)
+                questionDao.delete(question);
+        }
+        return true;
+    }
+
     private Specification<Question> buildSpecifications(String label, String type){
         final String fLabel = label;
         final String fType = type;
@@ -193,4 +260,6 @@ public class QuestionServiceImpl implements QuestionService {
         }
         return questionDTOList;
     }
+
+
 }

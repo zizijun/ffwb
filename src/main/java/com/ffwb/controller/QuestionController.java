@@ -1,16 +1,14 @@
 package com.ffwb.controller;
 
 import com.ffwb.DTO.QuestionDTO;
+import com.ffwb.entity.Manager;
 import com.ffwb.entity.Question;
 import com.ffwb.model.PageListModel;
 import com.ffwb.model.ServiceResult;
 import com.ffwb.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Page;
 
@@ -87,4 +85,44 @@ public class QuestionController extends ApiController{
         return ServiceResult.success(questions);
     }
 
+    /*@RequestMapping(value="/questions/label",method = RequestMethod.POST)
+    @ResponseBody
+    public ServiceResult labelQuestion(@RequestParam(value="label",defaultValue = "")String label,
+                                       @RequestParam(value="id",defaultValue = "-1")Long id){
+        System.out.println("label:"+label);
+        boolean res=questionService.labelQuestions(label,id);
+        return ServiceResult.success("加入标签"+res);
+    }*/
+
+    @RequestMapping(value="/questions/label",method=RequestMethod.PUT)
+    @ResponseBody
+    public ServiceResult labelQuestion(@RequestBody List<QuestionDTO> dtolist)throws Exception{
+        checkParameter(dtolist!=null,"question list cannot be null");
+        boolean flag=questionService.labelQuestions(dtolist);
+        return ServiceResult.success("修改标签结果"+flag);
+    }
+
+    @RequestMapping(value="/questions/update",method=RequestMethod.PUT)
+    @ResponseBody
+    public ServiceResult updateQuestion(@RequestBody List<QuestionDTO> dtolist)throws Exception{
+        checkParameter(dtolist!=null,"question to be updated is null");
+        boolean flag=questionService.updateQuestions(dtolist);
+        return ServiceResult.success("更新问题结果"+flag);
+    }
+
+    @RequestMapping(value="/questions/add",method=RequestMethod.POST)
+    @ResponseBody
+    public ServiceResult addQuestion(@RequestBody QuestionDTO dto, @RequestParam(value="managerId",defaultValue = "-1")Long managerId)throws Exception{
+        checkParameter(dto!=null,"question to be added is null");
+        boolean flag=questionService.addQuestions(dto,managerId);
+        return ServiceResult.success("添加问题结果"+flag);
+    }
+
+    @RequestMapping(value="/questions/delete",method=RequestMethod.PUT)
+    @ResponseBody
+    public ServiceResult deleteQuestion(@RequestBody List<QuestionDTO> dtolist)throws Exception{
+        checkParameter(dtolist!=null,"question to be deleted is null");
+        boolean flag=questionService.deleteQuestions(dtolist);
+        return ServiceResult.success("删除问题结果"+flag);
+    }
 }

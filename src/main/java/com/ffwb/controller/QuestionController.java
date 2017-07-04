@@ -85,15 +85,6 @@ public class QuestionController extends ApiController{
         return ServiceResult.success(questions);
     }
 
-    /*@RequestMapping(value="/questions/label",method = RequestMethod.POST)
-    @ResponseBody
-    public ServiceResult labelQuestion(@RequestParam(value="label",defaultValue = "")String label,
-                                       @RequestParam(value="id",defaultValue = "-1")Long id){
-        System.out.println("label:"+label);
-        boolean res=questionService.labelQuestions(label,id);
-        return ServiceResult.success("加入标签"+res);
-    }*/
-
     @RequestMapping(value="/questions/label",method=RequestMethod.PUT)
     @ResponseBody
     public ServiceResult labelQuestion(@RequestBody List<QuestionDTO> dtolist)throws Exception{
@@ -109,14 +100,6 @@ public class QuestionController extends ApiController{
         boolean flag=questionService.updateQuestions(dtolist);
         return ServiceResult.success("更新问题结果"+flag);
     }
-
-    /*@RequestMapping(value="/questions/add",method=RequestMethod.POST)
-    @ResponseBody
-    public ServiceResult addQuestion(@RequestBody QuestionDTO dto, @RequestParam(value="managerId",defaultValue = "-1")Long managerId)throws Exception{
-        checkParameter(dto!=null,"question to be added is null");
-        boolean flag=questionService.addQuestions(dto,managerId);
-        return ServiceResult.success("添加问题结果"+flag);
-    }*/
 
     @RequestMapping(value="/questions/add",method=RequestMethod.POST)
     @ResponseBody

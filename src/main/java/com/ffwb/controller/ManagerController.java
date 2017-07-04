@@ -35,6 +35,6 @@ public class ManagerController extends ApiController{
     public ServiceResult register(@RequestBody Manager manager) throws Exception{
         checkParameter(manager!=null,"manager cannot be empty!");
         Manager managerPost = managerService.addManager(manager);
-        return ServiceResult.success(manager);
+        return ServiceResult.success(managerPost);
     }
 }

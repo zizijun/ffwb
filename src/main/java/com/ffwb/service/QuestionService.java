@@ -23,7 +23,7 @@ public interface QuestionService {
 
     boolean updateQuestions(List<QuestionDTO> dto);
 
-    boolean addQuestions(QuestionDTO dto, Long managerId);
+    boolean addQuestions(List<QuestionDTO> dto, Long managerId);
 
     boolean deleteQuestions(List<QuestionDTO> dto);
 }

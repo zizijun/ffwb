@@ -186,25 +186,26 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public boolean addQuestions(QuestionDTO q,Long managerId) {
-        Question question=new Question();
-        question.setDescription(q.getDescription());
-        question.setSolution(q.getSolution());
-        question.setType(q.getType());
-        Manager manager=managerDao.findOne(managerId);
-        if(manager!=null)
+    public boolean addQuestions(List<QuestionDTO> dto,Long managerId) {
+        Manager manager = managerDao.findOne(managerId);
+        if (manager == null) return false;
+        for(QuestionDTO q:dto) {
+            Question question = new Question();
+            question.setDescription(q.getDescription());
+            question.setSolution(q.getSolution());
+            question.setType(q.getType());
             question.setManager(manager);
-        else return false;
-        question.setAlive(1);
-        List<String> label=q.getLabel();
-        String nlabel="";
-        for(String l:label)
-            nlabel+=l+" ";                //以空格分割label
-        question.setLabel(nlabel);
-        if(q.getOptionJson()!=null){
-            question.setOptionJson(JsonType.simpleMapToJsonStr(q.getOptionJson()));
+            question.setAlive(1);
+            List<String> label = q.getLabel();
+            String nlabel = "";
+            for (String l : label)
+                nlabel += l + " ";                //以空格分割label
+            question.setLabel(nlabel);
+            if (q.getOptionJson() != null) {
+                question.setOptionJson(JsonType.simpleMapToJsonStr(q.getOptionJson()));
+            }
+            questionDao.save(question);
         }
-        questionDao.save(question);
         return true;
     }
 

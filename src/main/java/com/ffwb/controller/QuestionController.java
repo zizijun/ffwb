@@ -110,9 +110,17 @@ public class QuestionController extends ApiController{
         return ServiceResult.success("更新问题结果"+flag);
     }
 
-    @RequestMapping(value="/questions/add",method=RequestMethod.POST)
+    /*@RequestMapping(value="/questions/add",method=RequestMethod.POST)
     @ResponseBody
     public ServiceResult addQuestion(@RequestBody QuestionDTO dto, @RequestParam(value="managerId",defaultValue = "-1")Long managerId)throws Exception{
+        checkParameter(dto!=null,"question to be added is null");
+        boolean flag=questionService.addQuestions(dto,managerId);
+        return ServiceResult.success("添加问题结果"+flag);
+    }*/
+
+    @RequestMapping(value="/questions/add",method=RequestMethod.POST)
+    @ResponseBody
+    public ServiceResult addQuestion(@RequestBody List<QuestionDTO> dto, @RequestParam(value="managerId",defaultValue = "-1")Long managerId)throws Exception{
         checkParameter(dto!=null,"question to be added is null");
         boolean flag=questionService.addQuestions(dto,managerId);
         return ServiceResult.success("添加问题结果"+flag);

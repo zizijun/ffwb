@@ -189,22 +189,10 @@ public class QuestionServiceImpl implements QuestionService {
     public boolean addQuestions(List<QuestionDTO> dto,Long managerId) {
         Manager manager = managerDao.findOne(managerId);
         if (manager == null) return false;
-        for(QuestionDTO q:dto) {
-            Question question = new Question();
-            question.setDescription(q.getDescription());
-            question.setSolution(q.getSolution());
-            question.setType(q.getType());
-            question.setManager(manager);
-            question.setAlive(1);
-            List<String> label = q.getLabel();
-            String nlabel = "";
-            for (String l : label)
-                nlabel += l + " ";                //以空格分割label
-            question.setLabel(nlabel);
-            if (q.getOptionJson() != null) {
-                question.setOptionJson(JsonType.simpleMapToJsonStr(q.getOptionJson()));
-            }
-            questionDao.save(question);
+        List<Question> questionList=dto2Pojo(dto);
+        for(Question q:questionList){
+            q.setManager(manager);
+            questionDao.save(q);
         }
         return true;
     }
@@ -214,7 +202,7 @@ public class QuestionServiceImpl implements QuestionService {
         for(QuestionDTO q:dto){
             Question question=questionDao.findOne(q.getId());
             if(question!=null)
-                questionDao.delete(question);
+                question.setAlive(0);
         }
         return true;
     }
@@ -260,6 +248,32 @@ public class QuestionServiceImpl implements QuestionService {
             questionDTOList.add(dto);
         }
         return questionDTOList;
+    }
+
+    /**
+     * pojo2dto
+     * @param dto
+     * @return
+     */
+    private List<Question> dto2Pojo(List<QuestionDTO> dto) {
+        List<Question> questionList=new ArrayList<>();
+        for (QuestionDTO q : dto) {
+            Question question = new Question();
+            question.setDescription(q.getDescription());
+            question.setSolution(q.getSolution());
+            question.setType(q.getType());
+            question.setAlive(1);
+            List<String> label = q.getLabel();
+            String nlabel = "";
+            for (String l : label)
+                nlabel += l + " ";                //以空格分割label
+            question.setLabel(nlabel);
+            if (q.getOptionJson() != null) {
+                question.setOptionJson(JsonType.simpleMapToJsonStr(q.getOptionJson()));
+            }
+            questionList.add(question);
+        }
+        return questionList;
     }
 
 

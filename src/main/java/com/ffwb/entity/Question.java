@@ -38,6 +38,11 @@ public class Question {
 
     /**
      * 类型
+     *   1.选择题
+     *   2.填空题
+     *   3.判断题
+     *   4.编程题
+     *   5.简答题
      */
     @Column
     private String type;
@@ -53,6 +58,18 @@ public class Question {
      */
     @Column
     private String optionJson;
+
+    /**
+     * 分数
+     */
+    @Column
+    private int score;
+
+    /**
+     * 难度
+     */
+    @Column
+    private double difficulty;
 
     @Column
     private int alive;
@@ -136,11 +153,27 @@ public class Question {
         this.type = type;
     }
 
+
     public Set<Tag> getTags() {
         return tags;
     }
 
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public double getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(double difficulty) {
+        this.difficulty = difficulty;
     }
 }

@@ -15,6 +15,10 @@ import java.util.Random;
 public class Population {
     private List<Paper> papers;
 
+    public Population (int size) {
+        papers = new ArrayList<>(size);
+    }
+
     public Population (int size, Rule rule) {
         papers = new ArrayList<>(size);
         Paper paper;

@@ -46,6 +46,10 @@ public class Paper {
         questions = new ArrayList<>();
     }
 
+    public Paper (int size) {
+        questions = new ArrayList<>(size);
+    }
+
     public int getTotalScore () {
         if (totalScore != 0) {
             return totalScore;
@@ -174,5 +178,12 @@ public class Paper {
 
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
+    }
+
+    public Question getQuestion(int index) {
+        if (questions != null && questions.size() > index) {
+            return questions.get(index);
+        }
+        return null;
     }
 }

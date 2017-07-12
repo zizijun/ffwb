@@ -9,4 +9,6 @@ import java.util.List;
  */
 public interface TagService {
     List<Tag> findAllAlive(int alive);
+
+    Tag addTag(Tag tag);
 }

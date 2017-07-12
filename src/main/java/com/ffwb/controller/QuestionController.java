@@ -80,40 +80,58 @@ public class QuestionController extends ApiController{
                                                   @RequestParam(value="sortField", defaultValue="id") String sortField,
                                                   @RequestParam(value="sortOrder", defaultValue="ASC") String sortOrder){
         //TODO
-        System.out.println("label: "+label +"   "+"type:"+type);
         PageListModel questions = questionService.getQuestionsByConditions(label, type, pageIndex, pageSize, sortField, sortOrder);
         return ServiceResult.success(questions);
     }
 
-    @RequestMapping(value="/questions/label",method=RequestMethod.PUT)
-    @ResponseBody
-    public ServiceResult labelQuestion(@RequestBody List<QuestionDTO> dtolist)throws Exception{
-        checkParameter(dtolist!=null,"question list cannot be null");
-        boolean flag=questionService.labelQuestions(dtolist);
-        return ServiceResult.success("修改标签结果"+flag);
-    }
+//    @RequestMapping(value="/questions/label",method=RequestMethod.PUT)
+//    @ResponseBody
+//    public ServiceResult labelQuestion(@RequestBody List<QuestionDTO> dtolist)throws Exception{
+//        checkParameter(dtolist!=null,"question list cannot be null");
+//        boolean flag=questionService.labelQuestions(dtolist);
+//        return ServiceResult.success("修改标签结果"+flag);
+//    }
 
+    /**
+     * 问题更新
+     * @param dtolist
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value="/questions/update",method=RequestMethod.PUT)
     @ResponseBody
     public ServiceResult updateQuestion(@RequestBody List<QuestionDTO> dtolist)throws Exception{
         checkParameter(dtolist!=null,"question to be updated is null");
-        boolean flag=questionService.updateQuestions(dtolist);
-        return ServiceResult.success("更新问题结果"+flag);
+        int time=questionService.updateQuestions(dtolist);
+        return ServiceResult.success("成功更新"+time +"个问题,失败"+(dtolist.size()-time)+"次");
     }
 
+    /**
+     * 问题新增
+     * @param dtolist
+     * @param managerId
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value="/questions/add",method=RequestMethod.POST)
     @ResponseBody
-    public ServiceResult addQuestion(@RequestBody List<QuestionDTO> dto, @RequestParam(value="managerId",defaultValue = "-1")Long managerId)throws Exception{
-        checkParameter(dto!=null,"question to be added is null");
-        boolean flag=questionService.addQuestions(dto,managerId);
-        return ServiceResult.success("添加问题结果"+flag);
+    public ServiceResult addQuestion(@RequestBody List<QuestionDTO> dtolist, @RequestParam(value="managerId",defaultValue = "-1")Long managerId)throws Exception{
+        checkParameter(dtolist!=null,"question to be added is null");
+        int time=questionService.addQuestions(dtolist,managerId);
+        return ServiceResult.success("成功增加"+time +"个问题,失败"+(dtolist.size()-time)+"次");
     }
 
+    /**
+     * 问题删除
+     * @param dtolist
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value="/questions/delete",method=RequestMethod.PUT)
     @ResponseBody
     public ServiceResult deleteQuestion(@RequestBody List<QuestionDTO> dtolist)throws Exception{
         checkParameter(dtolist!=null,"question to be deleted is null");
-        boolean flag=questionService.deleteQuestions(dtolist);
-        return ServiceResult.success("删除问题结果"+flag);
+        int time=questionService.deleteQuestions(dtolist);
+        return ServiceResult.success("成功删除"+time +"个问题,失败"+(dtolist.size()-time)+"次");
     }
 }

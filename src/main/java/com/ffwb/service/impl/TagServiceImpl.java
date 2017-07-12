@@ -19,6 +19,12 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<Tag> findAllAlive(int alive) {
-        return tagDao.findByAlive(1);
+        return tagDao.findByAlive(alive);
+    }
+
+    @Override
+    public Tag addTag(Tag tag) {
+        Tag tag1 = tagDao.save(tag);
+        return tag1;
     }
 }

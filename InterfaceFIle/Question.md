@@ -1,95 +1,181 @@
 # Question
 
-* URL /api/question/upload
-
-
+### 上传试题 试题存在excel之中
+* URL /api/question/upload?managerId=1
 * Method: POST
+* 参数:
+```
+file:excel
+```
+* 返回:
+```
+{
+  "code": 200,
+  "data": "成功上传6题目"
+}
+```
 
-* param
-
-  ```
-  {
-
-  “file":"xxx",
-
-  "managerId":"1"
-
+### 获取所有的试题(分页操作)
+ * URL /api/questions/all
+ * Method: GET
+ * 参数:
+ ```
+ RequestParam：pageIndex，pageSize，sortField，sortOrder 可以不写有默认值
+ ```
+ * 返回:
+ ```
+ {
+  "code": 200,
+  "data": {
+    "totalCount": 6,
+    "totalPage": 1,
+    "list": [
+      {
+        "id": 1,
+        "description": "下列哪一个是合法的标识符：",
+        "solution": "d",
+        "type": "选择题",
+        "label": null,
+        "tagIds": null,
+        "optionJson": {
+          "A": "12class",
+          "B": "+viod",
+          "C": "-5",
+          "D": "_black"
+        }
+      }
+      ...
+    ],
+    "pageSize": 10,
+    "pageIndex": 0
   }
+}
+```
 
-  ```
-
-  ​
-
-* URL /api/questions/all
-
-* Method: GET
-
-* param
-
-  ```
-  {
-    "pageIndex":1,
-    "pageSize":10,
-    "sortField":"id",
-    "sortOrder":"ASC"
-  }
-  ```
-
+### 根据条件搜索问题
 * URL /api/questions/search
-
 * Method: GET
-
-* param
-
-* ```
-  {
-    "label":"hah",
-    "type":"选择题",
-    "pageIndex":8,
-    "pageSize":10,
-    "sortField":"id",
-    "sortOrder":"ASC"
+* 参数:
+```
+RequestParam：label,type //搜索条件
+RequestParam：pageIndex，pageSize，sortField，sortOrder 可以不写有默认值
+```
+* 返回:
+```
+{
+  "code": 200,
+  "data": {
+    "totalCount": 6,
+    "totalPage": 1,
+    "list": [
+      {
+        "id": 1,
+        "description": "下列哪一个是合法的标识符：",
+        "solution": "d",
+        "type": "选择题",
+        "label": null,
+        "tagIds": null,
+        "optionJson": {
+          "A": "12class",
+          "B": "+viod",
+          "C": "-5",
+          "D": "_black"
+        }
+      }
+      ...
+    ],
+    "pageSize": 10,
+    "pageIndex": 0
   }
-  ```
+}
+```
 
-* URL /api/questions/label(或update、delete)
-
+### 问题更新
+* URL /api/questions/update
 * Method: PUT
-
-* param
-
-* ```
-  [
+* 参数:
+```
+[
     {
-      "id":5,
-      "description":"c++继承机制",
-      "solution":"hah",
-      "type":"简答题",
-      "label":["测试","c++"],
-      "optionJson":null
-    }
-  ]
-  ```
+        "id": 1,
+        "description": "下列哪一个是合法的标识符：",
+        "solution": "d",
+        "type": "选择题",
+        "label": "java",
+        "tagIds": [1,2],
+        "optionJson": {
+          "A": "12class",
+          "B": "+viod",
+          "C": "-5",
+          "D": "_black"
+        }
+      }
+    ]
+```
+* 返回:
+```
+{
+  "code": 200,
+  "data": "成功更新1个问题,失败0次"
+}
+```
 
+### 问题新增
 * URL /api/questions/add
-
-* Method: POST
-
-* param
-
-* ```
-  managerId:1 (这个是直接写在URL后面那种)
-
-  [
+* Method: PUT
+* 参数:
+```
+RequestParam:managerId
+[
     {
-      "id":-1,
-      "description":"c++继承机制",
-      "solution":"hah",
-      "type":"简答题",
-      "label":["测试","c++"],
-      "optionJson":null
-    }
-  ]
-  ```
+        "description": "下列哪一个是合法的标识符：",
+        "solution": "d",
+        "type": "选择题",
+        "label": "java",
+        "tagIds": [1,2],
+        "optionJson": {
+          "A": "12class",
+          "B": "+viod",
+          "C": "-5",
+          "D": "_black"
+        }
+      }
+    ]
+```
+* 返回:
+```
+{
+  "code": 200,
+  "data": "成功新增1个问题,失败0次"
+}
+```
 
-* ​
+### 问题删除
+* URL /api/questions/delete
+* Method: PUT
+* 参数:
+```
+[
+    {
+        "id": 1,
+        "description": "下列哪一个是合法的标识符：",
+        "solution": "d",
+        "type": "选择题",
+        "label": "java",
+        "tagIds": [1,2],
+        "optionJson": {
+          "A": "12class",
+          "B": "+viod",
+          "C": "-5",
+          "D": "_black"
+        }
+      }
+    ]
+```
+* 返回:
+```
+{
+  "code": 200,
+  "data": "成功删除1个问题,失败0次"
+}
+```

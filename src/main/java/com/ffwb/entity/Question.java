@@ -160,6 +160,7 @@ public class Question {
 
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
+    }
 
     public int getScore() {
         return score;

@@ -6,7 +6,7 @@ import java.util.List;
  * Created by dearlhd on 2017/7/11.
  * 组卷规则
  */
-public class Rule {
+public class ExamRule {
 
     /**
      * 试卷总分
@@ -42,6 +42,19 @@ public class Rule {
      * 试卷包含的知识点
      */
     private List<String> knowledgePoints;
+
+    public ExamRule() {
+
+    }
+
+    public ExamRule (int totalScore, double difficulty, int singleChoiceCount, int gapFillingCount, int checkCount, int programmingCount) {
+        this.totalScore = totalScore;
+        this.difficulty = difficulty;
+        this.singleChoiceCount = singleChoiceCount;
+        this.gapFillingCount = gapFillingCount;
+        this.checkCount = checkCount;
+        this.programmingCount = programmingCount;
+    }
 
     public int getTotalScore() {
         return totalScore;

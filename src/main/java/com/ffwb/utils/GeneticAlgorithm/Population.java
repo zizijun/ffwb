@@ -1,7 +1,6 @@
 package com.ffwb.utils.GeneticAlgorithm;
 
 import com.ffwb.entity.Question;
-import com.ffwb.service.QuestionService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,42 +18,42 @@ public class Population {
         papers = new ArrayList<>(size);
     }
 
-    public Population (int size, Rule rule) {
+    public Population (int size, ExamRule examRule) {
         papers = new ArrayList<>(size);
         Paper paper;
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             paper = new Paper();
             paper.setId(i + 1);
-            while (paper.getTotalScore() != rule.getTotalScore()) {
+            while (paper.getTotalScore() != examRule.getTotalScore()) {
                 paper.getQuestions().clear();
-                String idString = rule.getKnowledgePoints().toString();
+                String idString = examRule.getKnowledgePoints().toString();
                 // 单选题
-                if (rule.getSingleChoiceCount() > 0) {
-                    generateQuestion(1, random, rule.getSingleChoiceCount(), 2, idString,
+                if (examRule.getSingleChoiceCount() > 0) {
+                    generateQuestion(1, random, examRule.getSingleChoiceCount(), 2, idString,
                             "单选题数量不够，组卷失败", paper);
                 }
                 // 填空题
-                if (rule.getGapFillingCount() > 0) {
-                    generateQuestion(2, random, rule.getGapFillingCount(), 2, idString,
+                if (examRule.getGapFillingCount() > 0) {
+                    generateQuestion(2, random, examRule.getGapFillingCount(), 2, idString,
                             "填空题数量不够，组卷失败", paper);
                 }
 
                 // 判断题
-                if (rule.getCheckCount() > 0) {
-                    generateQuestion(3, random, rule.getCheckCount(), 2, idString,
+                if (examRule.getCheckCount() > 0) {
+                    generateQuestion(3, random, examRule.getCheckCount(), 2, idString,
                             "填空题数量不够，组卷失败", paper);
                 }
                 // 编程题
-                if (rule.getProgrammingCount() > 0) {
-                    generateQuestion(4, random, rule.getProgrammingCount(), 15, idString,
+                if (examRule.getProgrammingCount() > 0) {
+                    generateQuestion(4, random, examRule.getProgrammingCount(), 15, idString,
                             "编程题数量不够，组卷失败", paper);
                 }
             }
             // 计算试卷知识点覆盖率
-            paper.setKpCoverage(rule);
+            paper.setKpCoverage(examRule);
             // TODO 计算试卷适应度
-            paper.setFitness(rule, 0.3, 0.7);
+            paper.setFitness(examRule, 0.3, 0.7);
             papers.set(i, paper);
         }
     }
@@ -88,7 +87,7 @@ public class Population {
      *
      * @return
      */
-    public Paper getFitness() {
+    public Paper getFittest() {
         Paper paper = papers.get(0);
         for (int i = 1; i < papers.size(); i++) {
             if (paper.getFitness() < papers.get(i).getFitness()) {

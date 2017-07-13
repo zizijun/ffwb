@@ -3,8 +3,10 @@ package com.ffwb.service.impl;
 import com.ffwb.DTO.QuestionDTO;
 import com.ffwb.dao.ManagerDao;
 import com.ffwb.dao.QuestionDao;
+import com.ffwb.dao.TagDao;
 import com.ffwb.entity.Manager;
 import com.ffwb.entity.Question;
+import com.ffwb.entity.Tag;
 import com.ffwb.model.PageListModel;
 import com.ffwb.service.QuestionService;
 import com.ffwb.utils.ExcelReader;
@@ -28,10 +30,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by jinchuyang on 2017/6/22.
@@ -43,6 +42,8 @@ public class QuestionServiceImpl implements QuestionService {
     private QuestionDao questionDao;
     @Autowired
     private ManagerDao managerDao;
+    @Autowired
+    private TagDao tagDao;
 
     /**
      * 上传试卷 试题
@@ -151,60 +152,76 @@ public class QuestionServiceImpl implements QuestionService {
         return pageListModel;
     }
 
-    @Override
-    public boolean labelQuestions(List<QuestionDTO> dto) {
-        for(QuestionDTO q:dto){
-            Question question=questionDao.findOne(q.getId());
-            List<String> label=q.getLabel();
-            String nlabel="";
-            for(String l:label)
-                nlabel+=l+" ";                //以空格分割label
-            question.setLabel(nlabel);
-            questionDao.save(question);
-        }
-        return true;
-    }
+//    @Override
+//    public boolean labelQuestions(List<QuestionDTO> dto) {
+//        for(QuestionDTO q:dto){
+//            Question question=questionDao.findOne(q.getId());
+//            List<String> label=q.getLabel();
+//            String nlabel="";
+//            for(String l:label)
+//                nlabel+=l+" ";                //以空格分割label
+//            question.setLabel(nlabel);
+//            questionDao.save(question);
+//        }
+//        return true;
+//    }
 
     @Override
-    public boolean updateQuestions(List<QuestionDTO> dto) {
+    public int updateQuestions(List<QuestionDTO> dto) {
+        int successTimes = 0;
         for(QuestionDTO q:dto){
-            Question question=questionDao.findOne(q.getId());
-            List<String> label=q.getLabel();
-            String nlabel="";
-            for(String l:label)
-                nlabel+=l+" ";                //以空格分割label
-            question.setLabel(nlabel);
-            question.setDescription(q.getDescription());
-            question.setType(q.getType());
-            question.setSolution(q.getSolution());
-            if(q.getOptionJson()!=null){
-                question.setOptionJson(JsonType.simpleMapToJsonStr(q.getOptionJson()));
+            Question question=dto2pojo(q);
+            if (question == null){
+                continue;
             }
-            questionDao.save(question);
+            question = questionDao.save(question);
+            if (question != null){
+                successTimes++;
+            }
         }
-        return true;
+        return successTimes;
     }
 
+
+
     @Override
-    public boolean addQuestions(List<QuestionDTO> dto,Long managerId) {
+    public int addQuestions(List<QuestionDTO> dtos,Long managerId) {
         Manager manager = managerDao.findOne(managerId);
-        if (manager == null) return false;
-        List<Question> questionList=dto2Pojo(dto);
-        for(Question q:questionList){
-            q.setManager(manager);
-            questionDao.save(q);
+        if (manager == null) return 0;
+        //List<Question> questionList=dto2Pojo(dto);
+        int successTimes = 0;
+        for (QuestionDTO dto : dtos){
+            Question question = dto2pojo(dto);
+            if (question == null)
+                continue;
+            question.setManager(manager);
+            question = questionDao.save(question);
+            if (question != null){
+                successTimes++;
+            }
         }
-        return true;
+        return  successTimes;
     }
 
+    /**
+     * 删除题目
+     * @param dto
+     * @return
+     */
     @Override
-    public boolean deleteQuestions(List<QuestionDTO> dto) {
+    public int deleteQuestions(List<QuestionDTO> dto) {
+        int successTimes = 0;
         for(QuestionDTO q:dto){
             Question question=questionDao.findOne(q.getId());
-            if(question!=null)
-                question.setAlive(0);
+            if(question==null)
+                continue;
+            question.setAlive(0);
+            question = questionDao.save(question);
+            if (question != null){
+                successTimes++;
+            }
         }
-        return true;
+        return successTimes;
     }
 
     private Specification<Question> buildSpecifications(String label, String type){
@@ -241,40 +258,36 @@ public class QuestionServiceImpl implements QuestionService {
             dto.setDescription(question.getDescription());
             dto.setSolution(question.getSolution());
             dto.setType(question.getType());
+            dto.setLabel(question.getLabel());
             if(question.getOptionJson() != null){
                 Map map = JsonType.getData(question.getOptionJson());
                 dto.setOptionJson(map);
             }
+
+            dto.setTags(question.getTags());
             questionDTOList.add(dto);
         }
         return questionDTOList;
     }
 
     /**
-     * pojo2dto
-     * @param dto
+     * DTO2pojo
      * @return
      */
-    private List<Question> dto2Pojo(List<QuestionDTO> dto) {
-        List<Question> questionList=new ArrayList<>();
-        for (QuestionDTO q : dto) {
-            Question question = new Question();
-            question.setDescription(q.getDescription());
-            question.setSolution(q.getSolution());
-            question.setType(q.getType());
-            question.setAlive(1);
-            List<String> label = q.getLabel();
-            String nlabel = "";
-            for (String l : label)
-                nlabel += l + " ";                //以空格分割label
-            question.setLabel(nlabel);
-            if (q.getOptionJson() != null) {
-                question.setOptionJson(JsonType.simpleMapToJsonStr(q.getOptionJson()));
-            }
-            questionList.add(question);
+    private Question dto2pojo(QuestionDTO questionDTO){
+        Question question=questionDao.findOne(questionDTO.getId());
+        if (question == null){
+            return question;
         }
-        return questionList;
+        question.setLabel(questionDTO.getLabel());
+        question.setDescription(questionDTO.getDescription());
+        question.setType(questionDTO.getType());
+        question.setSolution(questionDTO.getSolution());
+        question.setTags(questionDTO.getTags());
+        if(questionDTO.getOptionJson()!=null){
+            question.setOptionJson(JsonType.simpleMapToJsonStr(questionDTO.getOptionJson()));
+        }
+        return question;
     }
-
 
 }

@@ -1,6 +1,7 @@
 package com.ffwb.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -28,7 +29,7 @@ public class Tag {
      * 是否被删除
      */
     @Column
-    private int alive;
+    private int alive = 1;
 
     //只需要设置mappedBy="games"表明Game实体是关系被维护端就可以了
     //级联保存、级联删除等之类的属性在多对多关系中是不需要设置
@@ -60,6 +61,7 @@ public class Tag {
         this.alive = alive;
     }
 
+    @JsonIgnore
     public Set<Question> getQuestions() {
         return questions;
     }

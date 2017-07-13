@@ -1,10 +1,12 @@
 package com.ffwb.DTO;
 
 import com.ffwb.entity.Manager;
+import com.ffwb.entity.Tag;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by jinchuyang on 2017/6/26.
@@ -29,9 +31,14 @@ public class QuestionDTO {
     private String type;
 
     /**
-     * 标签
+     * 标签 java／前端
      */
-    List<String> label;
+    String label;
+
+    /**
+     * tag 数据库／网络／多线程
+     */
+    Set<Tag> tags;
 
     /**
      * 选项
@@ -70,19 +77,27 @@ public class QuestionDTO {
         this.type = type;
     }
 
-    public List<String> getLabel() {
-        return label;
-    }
-
-    public void setLabel(List<String> label) {
-        this.label = label;
-    }
-
     public Map getOptionJson() {
         return optionJson;
     }
 
     public void setOptionJson(Map optionJson) {
         this.optionJson = optionJson;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
 }

@@ -258,10 +258,16 @@ public class QuestionServiceImpl implements QuestionService {
             dto.setDescription(question.getDescription());
             dto.setSolution(question.getSolution());
             dto.setType(question.getType());
+            dto.setLabel(question.getLabel());
             if(question.getOptionJson() != null){
                 Map map = JsonType.getData(question.getOptionJson());
                 dto.setOptionJson(map);
             }
+            Set<Integer> tagIds = new HashSet<Integer>();
+            for (Tag tag : question.getTags()){
+                tagIds.add(tag.getId().intValue());
+            }
+            dto.setTagIds(tagIds);
             questionDTOList.add(dto);
         }
         return questionDTOList;

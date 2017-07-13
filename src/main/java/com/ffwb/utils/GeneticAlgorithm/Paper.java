@@ -3,7 +3,10 @@ package com.ffwb.utils.GeneticAlgorithm;
 import com.ffwb.entity.Question;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by dearlhd on 2017/7/11.
@@ -87,9 +90,14 @@ public class Paper {
      * TODO 计算知识点覆盖率
      * 计算公式：个体包含的知识点 / 期望包含的知识点
      */
-    public void setKpCoverage (Rule rule) {
+    public void setKpCoverage (ExamRule rule) {
         if (kPCoverage == 0.0) {
-            // TODO
+            Set<String> result = new HashSet<>();
+            result.addAll(rule.getKnowledgePoints());
+            Set<String> another = questions.stream().map(question -> String.valueOf(question.getTags())).collect(Collectors.toSet());
+            // 交集操作
+            result.retainAll(another);
+            kPCoverage = result.size() / rule.getKnowledgePoints().size();
         }
     }
 
@@ -102,13 +110,13 @@ public class Paper {
      * 其中M/N为知识点覆盖率，EP为期望难度系数，P为种群个体难度系数，f1为知识点分布的权重
      * ，f2为难度系数所占权重。当f1=0时退化为只限制试题难度系数，当f2=0时退化为只限制知识点分布
      *
-     * @param rule 组卷规则
+     * @param examRule 组卷规则
      * @param f1   知识点分布的权重
      * @param f2   难度系数的权重
      */
-    public void setFitness(Rule rule, double f1, double f2) {
+    public void setFitness(ExamRule examRule, double f1, double f2) {
         if (fitness == 0) {
-            fitness = 1 - (1 - getkPCoverage()) * f1 - Math.abs(rule.getDifficulty() - getDifficulty()) * f2;
+            fitness = 1 - (1 - getkPCoverage()) * f1 - Math.abs(examRule.getDifficulty() - getDifficulty()) * f2;
         }
     }
 

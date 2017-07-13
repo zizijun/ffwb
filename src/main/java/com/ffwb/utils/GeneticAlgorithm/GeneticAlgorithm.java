@@ -25,14 +25,14 @@ public class GeneticAlgorithm {
     /**
      * TODO 进化种群
      */
-    public static Population evolvePopulation(Population pop, Rule rule) {
+    public static Population evolvePopulation(Population pop, ExamRule examRule) {
         Population newPopulation = new Population(pop.getLength());
         int elitismOffset;
         // 精英主义
         if (elitism) {
             elitismOffset = 1;
             // 保留上一代最优秀个体
-            Paper fitness = pop.getFitness();
+            Paper fitness = pop.getFittest();
             fitness.setId(0);
             newPopulation.setPaper(0, fitness);
         }
@@ -45,7 +45,7 @@ public class GeneticAlgorithm {
                 parent2 = select(pop);
             }
             // 交叉
-            Paper child = crossover(parent1, parent2, rule);
+            Paper child = crossover(parent1, parent2, examRule);
             child.setId(i);
             newPopulation.setPaper(i, child);
         }
@@ -55,8 +55,8 @@ public class GeneticAlgorithm {
             tmpPaper = newPopulation.getPaper(i);
             mutate(tmpPaper);
             // 计算知识点覆盖率与适应度
-            tmpPaper.setKpCoverage(rule);
-            tmpPaper.setFitness(rule, 0.3, 0.7);
+            tmpPaper.setKpCoverage(examRule);
+            tmpPaper.setFitness(examRule, 0.3, 0.7);
         }
         return newPopulation;
     }
@@ -64,7 +64,7 @@ public class GeneticAlgorithm {
     /**
      * TODO 交叉变异
      */
-    public static Paper crossover(Paper parent1, Paper parent2, Rule rule) {
+    public static Paper crossover(Paper parent1, Paper parent2, ExamRule examRule) {
         Paper child = new Paper(parent1.getQuestionCount());
         int s1 = (int) (Math.random() * parent1.getQuestionCount());
         int s2 = (int) (Math.random() * parent1.getQuestionCount());
@@ -78,12 +78,12 @@ public class GeneticAlgorithm {
 
         // 继承parent2中未被child继承的question
         // 防止出现重复的元素
-        String idString = rule.getKnowledgePoints().toString();
+        String idString = examRule.getKnowledgePoints().toString();
         for (int i = 0; i < startPos; i++) {
             if (!child.containsQuestion(parent2.getQuestion(i))) {
                 child.setQuestion(i, parent2.getQuestion(i));
             } else {
-                int type = getTypeByIndex(i, rule);
+                int type = getTypeByIndex(i, examRule);
                 // TODO 从数据库中寻找符合条件的候选题目，通过type和标签
 //                Question[] singleArray = QuestionService.getQuestionArray(type, idString.substring(1, idString.indexOf("]")));
                 Question[] singleArray = null;
@@ -94,7 +94,7 @@ public class GeneticAlgorithm {
             if (!child.containsQuestion(parent2.getQuestion(i))) {
                 child.setQuestion(i, parent2.getQuestion(i));
             } else {
-                int type = getTypeByIndex(i, rule);
+                int type = getTypeByIndex(i, examRule);
                 // TODO 寻找符合条件的候选题目，通过type和标签
 //                Question[] singleArray = QuestionService.getQuestionArray(type, idString.substring(1, idString.indexOf("]")));
                 Question[] singleArray = null;
@@ -105,15 +105,15 @@ public class GeneticAlgorithm {
         return child;
     }
 
-    private static int getTypeByIndex(int index, Rule rule) {
+    private static int getTypeByIndex(int index, ExamRule examRule) {
         int type = 0;
         // 单选
-        if (index < rule.getSingleChoiceCount()) {
+        if (index < examRule.getSingleChoiceCount()) {
             type = 1;
-        } else if (index < rule.getSingleChoiceCount() + rule.getGapFillingCount()) {
+        } else if (index < examRule.getSingleChoiceCount() + examRule.getGapFillingCount()) {
             // 填空
             type = 2;
-        } else if (index < rule.getSingleChoiceCount() + rule.getGapFillingCount() + rule.getCheckCount()) {
+        } else if (index < examRule.getSingleChoiceCount() + examRule.getGapFillingCount() + examRule.getCheckCount()) {
             // 判断
             type = 3;
         } else {
@@ -156,6 +156,6 @@ public class GeneticAlgorithm {
         for (int i = 0; i < tournamentSize; i++) {
             pop.setPaper(i, population.getPaper((int) (Math.random() * population.getLength())));
         }
-        return pop.getFitness();
+        return pop.getFittest();
     }
 }

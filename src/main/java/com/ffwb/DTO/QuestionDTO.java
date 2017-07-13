@@ -38,7 +38,7 @@ public class QuestionDTO {
     /**
      * tag 数据库／网络／多线程
      */
-    Set<Integer> tagIds;
+    Set<Tag> tags;
 
     /**
      * 选项
@@ -93,11 +93,11 @@ public class QuestionDTO {
         this.label = label;
     }
 
-    public Set<Integer> getTagIds() {
-        return tagIds;
+    public Set<Tag> getTags() {
+        return tags;
     }
 
-    public void setTagIds(Set<Integer> tagIds) {
-        this.tagIds = tagIds;
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
 }

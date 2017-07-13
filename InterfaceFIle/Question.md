@@ -31,19 +31,30 @@ file:excel
     "totalPage": 1,
     "list": [
       {
-        "id": 1,
-        "description": "下列哪一个是合法的标识符：",
-        "solution": "d",
-        "type": "选择题",
-        "label": null,
-        "tagIds": null,
-        "optionJson": {
-          "A": "12class",
-          "B": "+viod",
-          "C": "-5",
-          "D": "_black"
-        }
-      }
+              "id": 7,
+              "description": "下列哪一个是合法的标识符：",
+              "solution": "d",
+              "type": "选择题",
+              "label": "java",
+              "tags": [
+                {
+                  "id": 1,
+                  "content": "基本数据类型",
+                  "alive": 1
+                },
+                {
+                  "id": 2,
+                  "content": "引用数据类型",
+                  "alive": 1
+                }
+              ],
+              "optionJson": {
+                "A": "12class",
+                "B": "+viod",
+                "C": "-5",
+                "D": "_black"
+              }
+            }
       ...
     ],
     "pageSize": 10,
@@ -69,19 +80,30 @@ RequestParam：pageIndex，pageSize，sortField，sortOrder 可以不写有默�
     "totalPage": 1,
     "list": [
       {
-        "id": 1,
-        "description": "下列哪一个是合法的标识符：",
-        "solution": "d",
-        "type": "选择题",
-        "label": null,
-        "tagIds": null,
-        "optionJson": {
-          "A": "12class",
-          "B": "+viod",
-          "C": "-5",
-          "D": "_black"
-        }
-      }
+              "id": 7,
+              "description": "下列哪一个是合法的标识符：",
+              "solution": "d",
+              "type": "选择题",
+              "label": "java",
+              "tags": [
+                {
+                  "id": 1,
+                  "content": "基本数据类型",
+                  "alive": 1
+                },
+                {
+                  "id": 2,
+                  "content": "引用数据类型",
+                  "alive": 1
+                }
+              ],
+              "optionJson": {
+                "A": "12class",
+                "B": "+viod",
+                "C": "-5",
+                "D": "_black"
+              }
+            }
       ...
     ],
     "pageSize": 10,
@@ -97,19 +119,30 @@ RequestParam：pageIndex，pageSize，sortField，sortOrder 可以不写有默�
 ```
 [
     {
-        "id": 1,
-        "description": "下列哪一个是合法的标识符：",
-        "solution": "d",
-        "type": "选择题",
-        "label": "java",
-        "tagIds": [1,2],
-        "optionJson": {
-          "A": "12class",
-          "B": "+viod",
-          "C": "-5",
-          "D": "_black"
-        }
-      }
+            "id": 7,
+            "description": "下列哪一个是合法的标识符：",
+            "solution": "d",
+            "type": "选择题",
+            "label": "java",
+            "tags": [
+              {
+                "id": 1,
+                "content": "基本数据类型",
+                "alive": 1
+              },
+              {
+                "id": 2,
+                "content": "引用数据类型",
+                "alive": 1
+              }
+            ],
+            "optionJson": {
+              "A": "12class",
+              "B": "+viod",
+              "C": "-5",
+              "D": "_black"
+            }
+          }
     ]
 ```
 * 返回:
@@ -128,18 +161,30 @@ RequestParam：pageIndex，pageSize，sortField，sortOrder 可以不写有默�
 RequestParam:managerId
 [
     {
-        "description": "下列哪一个是合法的标识符：",
-        "solution": "d",
-        "type": "选择题",
-        "label": "java",
-        "tagIds": [1,2],
-        "optionJson": {
-          "A": "12class",
-          "B": "+viod",
-          "C": "-5",
-          "D": "_black"
-        }
-      }
+            "id": 7,
+            "description": "下列哪一个是合法的标识符：",
+            "solution": "d",
+            "type": "选择题",
+            "label": "java",
+            "tags": [
+              {
+                "id": 1,
+                "content": "基本数据类型",
+                "alive": 1
+              },
+              {
+                "id": 2,
+                "content": "引用数据类型",
+                "alive": 1
+              }
+            ],
+            "optionJson": {
+              "A": "12class",
+              "B": "+viod",
+              "C": "-5",
+              "D": "_black"
+            }
+          }
     ]
 ```
 * 返回:
@@ -157,19 +202,30 @@ RequestParam:managerId
 ```
 [
     {
-        "id": 1,
-        "description": "下列哪一个是合法的标识符：",
-        "solution": "d",
-        "type": "选择题",
-        "label": "java",
-        "tagIds": [1,2],
-        "optionJson": {
-          "A": "12class",
-          "B": "+viod",
-          "C": "-5",
-          "D": "_black"
-        }
-      }
+            "id": 7,
+            "description": "下列哪一个是合法的标识符：",
+            "solution": "d",
+            "type": "选择题",
+            "label": "java",
+            "tags": [
+              {
+                "id": 1,
+                "content": "基本数据类型",
+                "alive": 1
+              },
+              {
+                "id": 2,
+                "content": "引用数据类型",
+                "alive": 1
+              }
+            ],
+            "optionJson": {
+              "A": "12class",
+              "B": "+viod",
+              "C": "-5",
+              "D": "_black"
+            }
+          }
     ]
 ```
 * 返回:

@@ -340,10 +340,13 @@ public class QuestionServiceImpl implements QuestionService {
             dto.setDescription(question.getDescription());
             dto.setSolution(question.getSolution());
             dto.setType(question.getType());
+            dto.setLabel(question.getLabel());
             if(question.getOptionJson() != null){
                 Map map = JsonType.getData(question.getOptionJson());
                 dto.setOptionJson(map);
             }
+
+            dto.setTags(question.getTags());
             questionDTOList.add(dto);
         }
         return questionDTOList;
@@ -362,14 +365,7 @@ public class QuestionServiceImpl implements QuestionService {
         question.setDescription(questionDTO.getDescription());
         question.setType(questionDTO.getType());
         question.setSolution(questionDTO.getSolution());
-        Set<Tag> tags = new HashSet<>();
-        for (Integer id :questionDTO.getTagIds()){
-            Tag tag = tagDao.findByIdAndAlive(id, 1);
-            if (tag != null){
-                tags.add(tag);
-            }
-        }
-        question.setTags(tags);
+        question.setTags(questionDTO.getTags());
         if(questionDTO.getOptionJson()!=null){
             question.setOptionJson(JsonType.simpleMapToJsonStr(questionDTO.getOptionJson()));
         }

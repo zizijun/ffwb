@@ -28,8 +28,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -51,55 +50,138 @@ public class QuestionServiceImpl implements QuestionService {
      * @param managerId
      * @return
      */
+//    @Override
+//    public int upload(MultipartFile multipartFile, Long managerId) throws IOException {
+//        Manager manager = managerDao.findOne(managerId);
+//        if (manager == null){
+//            return -1;
+//        }
+//        List<Question> questions = new ArrayList<Question>();
+//        File file = File.createTempFile("./doc","temp");
+//        multipartFile.transferTo(file);
+//        ExcelReader excelReader = new ExcelReader(file);
+//        XSSFSheet sheet = excelReader.getWb().getSheetAt(0);
+//        //获得当前sheet的结束行
+//        int lastRowNum = sheet.getLastRowNum();
+//        for (int i = 1; i < lastRowNum; i++){
+//            Question question = new Question();
+//            question.setManager(manager);
+//            XSSFRow row = sheet.getRow(i);
+//            XSSFCell cell;
+//            cell = row.getCell(0);
+//            cell.setCellType(Cell.CELL_TYPE_STRING);
+//            //题干
+//            question.setDescription(cell.getStringCellValue());
+//            //答案
+//            cell = row.getCell(1);
+//            cell.setCellType(Cell.CELL_TYPE_STRING);
+//            question.setSolution(cell.getStringCellValue());
+//            //标签
+//            cell = row.getCell(2);
+//            cell.setCellType(Cell.CELL_TYPE_STRING);
+//            question.setType(cell.getStringCellValue());
+//            //option
+//            cell = row.getCell(3);
+//            if (cell!= null && cell.getStringCellValue() != null){
+//                Map<String, String> options = new HashMap<String, String>();
+//                for (int j = 3; j < 7;j++){
+//                    cell = row.getCell(j);
+//                    cell.setCellType(Cell.CELL_TYPE_STRING);
+//                    Character ch  = (char) (62+j);
+//                    options.put(ch.toString(),cell.getStringCellValue());
+//                }
+//
+//                question.setOptionJson(JsonType.simpleMapToJsonStr(options));
+//            }
+//            question.setAlive(1);
+//            questions.add(question);
+//            questionDao.save(question);
+//        }
+//        //questionDao.save(questions);
+//        return questions.size();
+//    }
+
+
     @Override
     public int upload(MultipartFile multipartFile, Long managerId) throws IOException {
-        Manager manager = managerDao.findOne(managerId);
-        if (manager == null){
+        Manager manager=managerDao.findOne(managerId);
+        if(manager==null)
             return -1;
-        }
-        List<Question> questions = new ArrayList<Question>();
+
         File file = File.createTempFile("./doc","temp");
         multipartFile.transferTo(file);
-        ExcelReader excelReader = new ExcelReader(file);
-        XSSFSheet sheet = excelReader.getWb().getSheetAt(0);
-        //获得当前sheet的结束行
-        int lastRowNum = sheet.getLastRowNum();
-        for (int i = 1; i < lastRowNum; i++){
-            Question question = new Question();
-            question.setManager(manager);
-            XSSFRow row = sheet.getRow(i);
-            XSSFCell cell;
-            cell = row.getCell(0);
-            cell.setCellType(Cell.CELL_TYPE_STRING);
-            //题干
-            question.setDescription(cell.getStringCellValue());
-            //答案
-            cell = row.getCell(1);
-            cell.setCellType(Cell.CELL_TYPE_STRING);
-            question.setSolution(cell.getStringCellValue());
-            //标签
-            cell = row.getCell(2);
-            cell.setCellType(Cell.CELL_TYPE_STRING);
-            question.setType(cell.getStringCellValue());
-            //option
-            cell = row.getCell(3);
-            if (cell!= null && cell.getStringCellValue() != null){
-                Map<String, String> options = new HashMap<String, String>();
-                for (int j = 3; j < 7;j++){
-                    cell = row.getCell(j);
-                    cell.setCellType(Cell.CELL_TYPE_STRING);
-                    Character ch  = (char) (62+j);
-                    options.put(ch.toString(),cell.getStringCellValue());
+        FileInputStream fis=new FileInputStream(file);
+        BufferedReader br=new BufferedReader(new InputStreamReader(fis,"UTF-8"));
+
+        List<Question> questions=new ArrayList<Question>();
+        String lineStr="";
+        try {
+            while ((lineStr = br.readLine()) != null) {
+                Question question = new Question();
+                //if(lineStr.substring(0,4).equals("题目描述")) {
+                String description = "";
+                description += lineStr;
+                while ((lineStr = br.readLine()) != null) {
+                    if (lineStr.length() > 4 && ((lineStr.substring(0, 4).equals("正确答案"))))
+                        break;
+                    description += lineStr;
                 }
 
-                question.setOptionJson(JsonType.simpleMapToJsonStr(options));
+                question.setDescription(description);
+                System.out.println(description);
+                //String tmps="dkjfd\"df\"";
+                // }else{
+                //questions.get()如何得到最后一个插进去的question，不处理就解析先放着
+                // }
+                //lineStr=br.readLine();
+                String[] tmp = lineStr.split(" ");
+                String solution = "";
+                for (String s : tmp) {
+                    if (!(s.equals("你的答案:")))
+                        solution += s;
+                    else break;
+                }
+                question.setSolution(solution);//正确答案：A
+                int count = 0;
+                Map<String, String> map = new HashMap<String, String>();
+                lineStr = br.readLine();
+                while (lineStr.substring(0, 4).equals("选项描述")) {
+                    if (lineStr.length() > 7 && lineStr.substring(6, 8).equals("添加"))
+                        break;
+                    Character ch = (char) (65 + count);
+                    count++;
+                    String option = "";
+                    option += lineStr.substring(6);
+
+                    while ((lineStr = br.readLine()) != null) {
+                        if (lineStr.length() > 4 && !(lineStr.substring(0, 4).equals("选项描述")))
+                            option += lineStr;
+                        else if (lineStr.length() <= 4)
+                            option += lineStr;
+                        else {
+                            break;
+                        }
+                        ;
+                    }
+                    map.put(ch.toString(), option);
+                }
+                question.setOptionJson(JsonType.simpleMapToJsonStr(map));
+                question.setAlive(1);
+                question.setManager(manager);
+                question.setType("选择题");
+                question.setDifficulty(3.0);
+                question.setScore(2);
+                questionDao.save(question);
+                questions.add(question);
+                while (!(lineStr = br.readLine()).equals("纠错")) {
+                    lineStr = br.readLine();
+                }
             }
-            question.setAlive(1);
-            questions.add(question);
-            questionDao.save(question);
+        }catch(NullPointerException e){
+
+        }finally {
+            return questions.size();
         }
-        //questionDao.save(questions);
-        return questions.size();
     }
 
     /**

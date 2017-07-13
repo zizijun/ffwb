@@ -27,7 +27,8 @@ public class Question {
     /**
      * 题干
      */
-    @Column
+    @Lob
+    @Column(name="description",length=60000)
     private String description;
 
     /**
@@ -56,7 +57,7 @@ public class Question {
     /**
      * 选项
      */
-    @Column
+    @Column(name="optionJson",length=10000)
     private String optionJson;
 
     /**

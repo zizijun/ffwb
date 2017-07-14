@@ -306,6 +306,18 @@ public class QuestionServiceImpl implements QuestionService {
         return successTimes;
     }
 
+    @Override
+    public List<Question> getQuestionByTag(String type, Tag tag) {
+        List<Question> questions = questionDao.findAll();
+        List<Question> questionList = new ArrayList<>();
+        for (Question question: questions){
+            if (question.getAlive() ==1 && question.getTags() != null && question.getTags().contains(tag) && question.getType() != null && question.getType().equals(type)){
+                questionList.add(question);
+            }
+        }
+        return questionList;
+    }
+
     private Specification<Question> buildSpecifications(String label, String type){
         final String fLabel = label;
         final String fType = type;

@@ -52,11 +52,11 @@ public class Exam {
     private int grade;
 
     /**
-     * 用户id
+     * 用户
      */
-    @Column
-    //@ManyToOne(targetEntity = User.class)
-    private long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     /**
      * 是否可用
@@ -121,12 +121,12 @@ public class Exam {
         this.grade = grade;
     }
 
-    public long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public int getAlive() {

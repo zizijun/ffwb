@@ -31,7 +31,7 @@ public class ExamServiceImpl implements ExamService {
     public Exam createExam(Exam exam) {
         Exam newExam = new Exam();
         newExam.setId(-1L);
-        if (examDao.findByUserIdAndName(exam.getUserId(), exam.getName()) != null) {
+        if (examDao.findByUserAndName(exam.getUser(), exam.getName()) != null) {
             return newExam;
         }
         exam.setTotalTime(-1);

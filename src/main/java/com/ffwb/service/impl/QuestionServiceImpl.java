@@ -128,12 +128,7 @@ public class QuestionServiceImpl implements QuestionService {
                 }
 
                 question.setDescription(description);
-                System.out.println(description);
-                //String tmps="dkjfd\"df\"";
-                // }else{
-                //questions.get()如何得到最后一个插进去的question，不处理就解析先放着
-                // }
-                //lineStr=br.readLine();
+
                 String[] tmp = lineStr.split(" ");
                 String solution = "";
                 for (String s : tmp) {
@@ -175,6 +170,9 @@ public class QuestionServiceImpl implements QuestionService {
                 questions.add(question);
                 while (!(lineStr = br.readLine()).equals("纠错")) {
                     lineStr = br.readLine();
+                }
+                if(!(lineStr.equals("可能的解答0"))){
+
                 }
             }
         }catch(NullPointerException e){

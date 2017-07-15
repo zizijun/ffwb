@@ -225,7 +225,7 @@
     "code":200,
     "data":{
       "id":1,
-      "content":"原因是……",
+      "content":"原因是",
       "createdTime":"2017-07-15",
       "alive":1
     }

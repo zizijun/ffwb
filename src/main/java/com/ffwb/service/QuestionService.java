@@ -1,6 +1,8 @@
 package com.ffwb.service;
 
 import com.ffwb.DTO.QuestionDTO;
+import com.ffwb.entity.Question;
+import com.ffwb.entity.Tag;
 import com.ffwb.model.PageListModel;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,4 +25,6 @@ public interface QuestionService {
     int addQuestions(List<QuestionDTO> dto, Long managerId);
 
     int deleteQuestions(List<QuestionDTO> dto);
+
+    List<Question> getQuestionByTag(String type, Tag tag);
 }

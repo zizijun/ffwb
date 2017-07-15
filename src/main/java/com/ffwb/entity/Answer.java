@@ -16,16 +16,25 @@ public class Answer {
     private long id;
 
     /**
-     * 关联的考试id
+     * 用户
      */
-    @Column
-    private long examId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     /**
-     * 对应的问题id
+     * 关联的考试id
      */
-    @Column
-    private long questionId;
+    @ManyToOne
+    @JoinColumn(name = "exam_id")
+    private Exam exam;
+
+    /**
+     * 用户
+     */
+    @ManyToOne
+    @JoinColumn(name = "question_id")
+    private Question question;
 
     /**
      * 答案内容
@@ -53,20 +62,20 @@ public class Answer {
         this.id = id;
     }
 
-    public long getExamId() {
-        return examId;
+    public Exam getExam() {
+        return exam;
     }
 
-    public void setExamId(long examId) {
-        this.examId = examId;
+    public void setExam(Exam exam) {
+        this.exam = exam;
     }
 
-    public long getQuestionId() {
-        return questionId;
+    public Question getQuestion() {
+        return question;
     }
 
-    public void setQuestionId(long questionId) {
-        this.questionId = questionId;
+    public void setQuestion(Question question) {
+        this.question = question;
     }
 
     public String getAnswer() {
@@ -91,5 +100,13 @@ public class Answer {
 
     public void setAlive(int alive) {
         this.alive = alive;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

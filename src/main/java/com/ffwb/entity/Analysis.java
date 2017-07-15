@@ -18,7 +18,7 @@ public class Analysis {
     private Long id;
 
     /**
-     * 用户
+     * 问题
      */
     @ManyToOne
     @JoinColumn(name = "question_id")

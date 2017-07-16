@@ -1,12 +1,8 @@
 package com.ffwb.service.impl;
 
 import com.ffwb.DTO.QuestionDTO;
-import com.ffwb.dao.ManagerDao;
-import com.ffwb.dao.QuestionDao;
-import com.ffwb.dao.TagDao;
-import com.ffwb.entity.Manager;
-import com.ffwb.entity.Question;
-import com.ffwb.entity.Tag;
+import com.ffwb.dao.*;
+import com.ffwb.entity.*;
 import com.ffwb.model.PageListModel;
 import com.ffwb.service.QuestionService;
 import com.ffwb.utils.ExcelReader;
@@ -43,7 +39,10 @@ public class QuestionServiceImpl implements QuestionService {
     private ManagerDao managerDao;
     @Autowired
     private TagDao tagDao;
-
+    @Autowired
+    private AnalysisDao analysisDao;
+    @Autowired
+    private UserDao userDao;
     /**
      * 上传试卷 试题
      * @param multipartFile
@@ -128,12 +127,7 @@ public class QuestionServiceImpl implements QuestionService {
                 }
 
                 question.setDescription(description);
-                System.out.println(description);
-                //String tmps="dkjfd\"df\"";
-                // }else{
-                //questions.get()如何得到最后一个插进去的question，不处理就解析先放着
-                // }
-                //lineStr=br.readLine();
+
                 String[] tmp = lineStr.split(" ");
                 String solution = "";
                 for (String s : tmp) {
@@ -161,7 +155,6 @@ public class QuestionServiceImpl implements QuestionService {
                         else {
                             break;
                         }
-                        ;
                     }
                     map.put(ch.toString(), option);
                 }
@@ -174,7 +167,48 @@ public class QuestionServiceImpl implements QuestionService {
                 questionDao.save(question);
                 questions.add(question);
                 while (!(lineStr = br.readLine()).equals("纠错")) {
-                    lineStr = br.readLine();
+
+                }
+
+                if(!((lineStr=br.readLine()).substring(0,6).equals("可能的解答0"))){
+                    String analysis="";
+                    analysis+=lineStr;
+                    while((lineStr=br.readLine())!=null){
+                        if(lineStr.length()>5&&lineStr.substring(0,5).equals("可能的解答"))
+                            break;
+                        analysis+=lineStr;
+                    }
+                    if(!(analysis.substring(7).equals(""))) {
+                        Analysis a = new Analysis();
+                        Random rand=new Random();
+                        long userId=rand.nextInt(8)+1;//产生1-8之间的随机数作为用户ID
+                        a.setUser(userDao.findOne(userId));
+                        a.setAlive(1);
+                        a.setContent(analysis.substring(7));
+                        a.setCreatedTime(new Date());
+                        a.setQuestion(question);
+                        analysisDao.save(a);
+                    }
+                    analysis="";
+                    if(!(lineStr.equals("解答结束"))&&(!(lineStr.substring(0,6).equals("可能的解答0")))){
+                        analysis+=lineStr;
+                        while((lineStr=br.readLine())!=null){
+                            if(!(lineStr.equals("解答结束")))
+                                analysis+=lineStr;
+                            else break;
+                        }
+                        if(!(analysis.substring(7).equals(""))) {
+                            Analysis b = new Analysis();
+                            Random rand=new Random();
+                            long userId=rand.nextInt(8)+1;
+                            b.setUser(userDao.findOne(userId));
+                            b.setQuestion(question);
+                            b.setCreatedTime(new Date());
+                            b.setContent(analysis.substring(7));
+                            b.setAlive(1);
+                            analysisDao.save(b);
+                        }
+                    }
                 }
             }
         }catch(NullPointerException e){

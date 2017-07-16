@@ -34,7 +34,7 @@ public class Analysis {
     /**
      * 内容
      */
-    @Column
+    @Column(name="content",length=20000)
     private String content;
 
     /**

@@ -36,4 +36,9 @@ public class UserServiceImpl implements UserService{
         User user = userDao.findByTelAndAlive(tel, 1);
         return user;
     }
+
+    @Override
+    public User findUserById (long id) {
+        return userDao.findByIdAndAlive(id, 1);
+    }
 }

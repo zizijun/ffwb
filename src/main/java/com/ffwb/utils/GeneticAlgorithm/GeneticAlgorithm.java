@@ -1,6 +1,8 @@
 package com.ffwb.utils.GeneticAlgorithm;
 
 import com.ffwb.entity.Question;
+import com.ffwb.service.QuestionService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,9 @@ public class GeneticAlgorithm {
      * 淘汰数组大小
      */
     private static final int tournamentSize = 5;
+
+    @Autowired
+    static private QuestionService questionService;
 
     /**
      * TODO 进化种群
@@ -83,42 +88,43 @@ public class GeneticAlgorithm {
             if (!child.containsQuestion(parent2.getQuestion(i))) {
                 child.setQuestion(i, parent2.getQuestion(i));
             } else {
-                int type = getTypeByIndex(i, examRule);
+                String type = getTypeByIndex(i, examRule);
                 // TODO 从数据库中寻找符合条件的候选题目，通过type和标签
 //                Question[] singleArray = QuestionService.getQuestionArray(type, idString.substring(1, idString.indexOf("]")));
-                Question[] singleArray = null;
-                child.setQuestion(i, singleArray[(int) (Math.random() * singleArray.length)]);
+
+                List<Question> singleArray = questionService.getQuestionByTag(type, examRule.getKnowledgePoints().get(0));
+                child.setQuestion(i, singleArray.get((int) (Math.random() * singleArray.size() )));
             }
         }
         for (int i = endPos; i < parent2.getQuestionCount(); i++) {
             if (!child.containsQuestion(parent2.getQuestion(i))) {
                 child.setQuestion(i, parent2.getQuestion(i));
             } else {
-                int type = getTypeByIndex(i, examRule);
+                String type = getTypeByIndex(i, examRule);
                 // TODO 寻找符合条件的候选题目，通过type和标签
 //                Question[] singleArray = QuestionService.getQuestionArray(type, idString.substring(1, idString.indexOf("]")));
-                Question[] singleArray = null;
-                child.setQuestion(i, singleArray[(int) (Math.random() * singleArray.length)]);
+                List<Question> singleArray = questionService.getQuestionByTag(type, examRule.getKnowledgePoints().get(0));
+                child.setQuestion(i, singleArray.get((int) (Math.random() * singleArray.size() )));
             }
         }
 
         return child;
     }
 
-    private static int getTypeByIndex(int index, ExamRule examRule) {
-        int type = 0;
+    private static String getTypeByIndex(int index, ExamRule examRule) {
+        String type;
         // 单选
         if (index < examRule.getSingleChoiceCount()) {
-            type = 1;
+            type = "1";
         } else if (index < examRule.getSingleChoiceCount() + examRule.getGapFillingCount()) {
             // 填空
-            type = 2;
+            type = "2";
         } else if (index < examRule.getSingleChoiceCount() + examRule.getGapFillingCount() + examRule.getCheckCount()) {
             // 判断
-            type = 3;
+            type = "3";
         } else {
             // 编程
-            type = 4;
+            type = "4";
         }
         return type;
     }

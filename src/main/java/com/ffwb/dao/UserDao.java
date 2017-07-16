@@ -10,5 +10,6 @@ import java.util.List;
  */
 public interface UserDao extends JpaRepository<User, Long>{
     User findByTelAndAlive(String tel, int alive);
+    User findByIdAndAlive (long id, int alive);
     List<User> findByAlive( int alive);
 }

@@ -4,6 +4,7 @@ import com.ffwb.dao.ExamDao;
 import com.ffwb.entity.Answer;
 import com.ffwb.entity.Exam;
 import com.ffwb.entity.Question;
+import com.ffwb.entity.User;
 import com.ffwb.service.ExamService;
 import com.ffwb.utils.GeneticAlgorithm.ExamRule;
 import com.ffwb.utils.GeneticAlgorithm.GeneticAlgorithm;
@@ -68,5 +69,15 @@ public class ExamServiceImpl implements ExamService {
         }
         Paper paper = population.getFittest();
         return paper.getQuestions();
+    }
+
+    @Override
+    public Exam findExamById (long examId) {
+        return examDao.findByIdAndAlive(examId, 1);
+    }
+
+    @Override
+    public List<Exam> getExamsByUser (User user) {
+        return examDao.findByUserAAndAlive(user, 1);
     }
 }

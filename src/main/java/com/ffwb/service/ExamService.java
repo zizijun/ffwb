@@ -5,6 +5,7 @@ import com.ffwb.entity.Exam;
 import com.ffwb.entity.Question;
 import com.ffwb.entity.User;
 
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -20,4 +21,6 @@ public interface ExamService {
     List<Exam> getExamsByUser (User user);
 
     Exam updateExam (Exam exam);
+
+    Exam finishExam(long examId) throws ParseException;
 }

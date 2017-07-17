@@ -80,7 +80,7 @@ public class ExamController extends ApiController{
     }
 
     /**
-     * 生成试题
+     * 获取某一个用户的所有试卷
      */
     @RequestMapping(value = "/exam/all", method = RequestMethod.GET)
     @ResponseBody
@@ -106,11 +106,8 @@ public class ExamController extends ApiController{
     @RequestMapping(value = "/exam/finish", method = RequestMethod.POST)
     @ResponseBody
     public ServiceResult finishExam (@RequestBody ExamDTO examDTO) throws Exception {
-        Exam exam = examService.findExamById(examDTO.getExamId());
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String date = df.format(new Date());
-        exam.setEndTime(new Date(date));
-        examService.updateExam(exam);
+        checkParameter(examDTO!=null, "exam is null");
+        Exam exam = examService.finishExam(examDTO.getExamId());
         return ServiceResult.success(exam);
     }
 

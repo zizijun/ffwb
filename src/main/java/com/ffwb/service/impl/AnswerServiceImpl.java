@@ -37,8 +37,8 @@ public class AnswerServiceImpl implements AnswerService {
         if (temp == null) {
             return null;
         }
-
-        return answerDao.save(answer);
+        temp.setAnswer(answer.getAnswer());
+        return answerDao.save(temp);
     }
 
     @Override

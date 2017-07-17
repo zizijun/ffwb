@@ -15,6 +15,9 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 
@@ -46,6 +49,17 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public Exam updateExam(Exam exam) {
         return examDao.save(exam);
+    }
+
+    @Override
+    public Exam finishExam(long examId) throws ParseException {
+        Exam exam = examDao.findByIdAndAlive(examId, 1);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String date = df.format(new Date());
+        Date d = df.parse(date);
+        exam.setEndTime(d);
+        exam = examDao.save(exam);
+        return exam;
     }
 
     @Override

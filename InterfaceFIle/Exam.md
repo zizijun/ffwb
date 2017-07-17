@@ -26,6 +26,8 @@
       "totalScore":-1,
       "grade": -1,
       "userId": 1,
+	  "startTime":"",
+	  "endTime":"",
       "alive": 1
     }
   }
@@ -106,6 +108,8 @@
           "totalScore":-1,
           "grade": -1,
           "userId": 1,
+		  "startTime":"2017-7-16 10:00:00",
+		  "endTime":"2017-7-16 10:28:58",
           "alive": 1
         },
         ...
@@ -135,7 +139,15 @@
   ```json
   {
     "code":200,
-    "data":"success"
+    "data":{
+	  "id":1,
+	  "userId":1,
+	  "examId":1,
+	  "questionId"7,
+	  "answer":"A,B",
+	  "isRight":false,
+	  "alive":1
+	}
   }
   ```
 

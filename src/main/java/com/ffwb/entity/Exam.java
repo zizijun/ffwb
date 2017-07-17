@@ -1,8 +1,10 @@
 package com.ffwb.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by dearlhd on 2017/7/3.
@@ -59,11 +61,24 @@ public class Exam {
     private User user;
 
     /**
+     * 开始时间
+     */
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd hh:mm:ss", timezone="GMT+8")
+    @Column
+    private Date startTime ;
+
+    /**
+     * 结束时间
+     */
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd hh:mm:ss", timezone="GMT+8")
+    @Column
+    private Date endTime ;
+
+    /**
      * 是否可用
      */
     @Column
     private int alive;
-
 
     public long getId() {
         return id;
@@ -135,5 +150,21 @@ public class Exam {
 
     public void setAlive(int alive) {
         this.alive = alive;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 }

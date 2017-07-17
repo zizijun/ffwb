@@ -9,4 +9,6 @@ public interface UserService {
     User addUser(User user);
 
     User login(String tel);
+
+    User findUserById (long id);
 }

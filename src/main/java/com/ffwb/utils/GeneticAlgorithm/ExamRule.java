@@ -1,5 +1,7 @@
 package com.ffwb.utils.GeneticAlgorithm;
 
+import com.ffwb.entity.Tag;
+
 import java.util.List;
 
 /**
@@ -41,7 +43,7 @@ public class ExamRule {
     /**
      * 试卷包含的知识点
      */
-    private List<String> knowledgePoints;
+    private List<Tag> knowledgePoints;
 
     public ExamRule() {
 
@@ -104,11 +106,11 @@ public class ExamRule {
         this.programmingCount = programmingCount;
     }
 
-    public List<String> getKnowledgePoints() {
+    public List<Tag> getKnowledgePoints() {
         return knowledgePoints;
     }
 
-    public void setKnowledgePoints(List<String> knowledgePoints) {
+    public void setKnowledgePoints(List<Tag> knowledgePoints) {
         this.knowledgePoints = knowledgePoints;
     }
 }

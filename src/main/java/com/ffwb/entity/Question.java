@@ -46,7 +46,7 @@ public class Question {
      *   5.简答题
      */
     @Column
-    private String type;
+    private int type;
 
     /**
      * 标签
@@ -146,11 +146,11 @@ public class Question {
         this.alive = alive;
     }
 
-    public String getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 

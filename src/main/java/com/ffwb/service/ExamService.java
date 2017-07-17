@@ -18,4 +18,6 @@ public interface ExamService {
     Exam findExamById (long examId);
 
     List<Exam> getExamsByUser (User user);
+
+    Exam updateExam (Exam exam);
 }

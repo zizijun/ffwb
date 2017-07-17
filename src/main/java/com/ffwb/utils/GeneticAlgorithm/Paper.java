@@ -1,6 +1,7 @@
 package com.ffwb.utils.GeneticAlgorithm;
 
 import com.ffwb.entity.Question;
+import com.ffwb.entity.Tag;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -93,7 +94,13 @@ public class Paper {
     public void setKpCoverage (ExamRule rule) {
         if (kPCoverage == 0.0) {
             Set<String> result = new HashSet<>();
-            result.addAll(rule.getKnowledgePoints());
+            List<String> points = new ArrayList<>();
+            List<Tag> tags = rule.getKnowledgePoints();
+            for (Tag tag : tags) {
+                String point = tag.getContent();
+                points.add(point);
+            }
+            result.addAll(points);
             Set<String> another = questions.stream().map(question -> String.valueOf(question.getTags())).collect(Collectors.toSet());
             // 交集操作
             result.retainAll(another);

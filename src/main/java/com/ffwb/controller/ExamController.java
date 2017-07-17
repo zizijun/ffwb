@@ -17,7 +17,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -96,6 +98,20 @@ public class ExamController extends ApiController{
     public ServiceResult resolve (@RequestBody Answer answer) throws Exception {
         Answer ret = answerService.updateAnswer(answer); // ret 为空是表示不存在
         return ServiceResult.success(ret);
+    }
+
+    /**
+     * 结束考试
+     */
+    @RequestMapping(value = "/exam/finish", method = RequestMethod.POST)
+    @ResponseBody
+    public ServiceResult finishExam (@RequestBody ExamDTO examDTO) throws Exception {
+        Exam exam = examService.findExamById(examDTO.getExamId());
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String date = df.format(new Date());
+        exam.setEndTime(new Date(date));
+        examService.updateExam(exam);
+        return ServiceResult.success(exam);
     }
 
     /**

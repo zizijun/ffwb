@@ -161,7 +161,7 @@ public class QuestionServiceImpl implements QuestionService {
                 question.setOptionJson(JsonType.simpleMapToJsonStr(map));
                 question.setAlive(1);
                 question.setManager(manager);
-                question.setType("选择题");
+                question.setType(1);
                 question.setDifficulty(3.0);
                 question.setScore(2);
                 questionDao.save(question);
@@ -252,7 +252,7 @@ public class QuestionServiceImpl implements QuestionService {
      * @return
      */
     @Override
-    public PageListModel getQuestionsByConditions(String label, String type, int pageIndex, int pageSize, String sortField, String sortOrder) {
+    public PageListModel getQuestionsByConditions(String label, int type, int pageIndex, int pageSize, String sortField, String sortOrder) {
         Sort.Direction direction = Sort.Direction.ASC;
         if (sortOrder.toUpperCase().equals("DESC")) {
             direction = Sort.Direction.DESC;
@@ -341,26 +341,26 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public List<Question> getQuestionByTag(String type, Tag tag) {
+    public List<Question> getQuestionByTag(int type, Tag tag) {
         List<Question> questions = questionDao.findAll();
         List<Question> questionList = new ArrayList<>();
         for (Question question: questions){
-            if (question.getAlive() ==1 && question.getTags() != null && question.getTags().contains(tag) && question.getType() != null && question.getType().equals(type)){
+            if (question.getAlive() ==1 && question.getTags() != null && question.getTags().contains(tag) && question.getType() == type ){
                 questionList.add(question);
             }
         }
         return questionList;
     }
 
-    private Specification<Question> buildSpecifications(String label, String type){
+    private Specification<Question> buildSpecifications(String label, int type){
         final String fLabel = label;
-        final String fType = type;
+        final int fType = type;
 
         Specification<Question> specification = new Specification<Question>(){
             @Override
             public Predicate toPredicate(Root<Question> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                 Predicate predicate = criteriaBuilder.conjunction();
-                if(null!=fType && !"".equals(fType)){
+                if(type != 0){
                     predicate.getExpressions().add(criteriaBuilder.equal(root.get("type"),fType));
                 }
                 if(null!=fLabel && !"".equals(fLabel)){

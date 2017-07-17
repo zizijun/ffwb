@@ -74,7 +74,7 @@ public class QuestionController extends ApiController{
     @RequestMapping(value = "/questions/search", method = RequestMethod.GET)
     @ResponseBody
     public ServiceResult getQuestionsByConditions(@RequestParam(value = "label", defaultValue = "") String label,
-                                                  @RequestParam(value = "type", defaultValue = "")String type,
+                                                  @RequestParam(value = "type", defaultValue = "")int type,
                                                   @RequestParam(value="pageIndex", defaultValue="0") int pageIndex,
                                                   @RequestParam(value="pageSize", defaultValue="10") int pageSize,
                                                   @RequestParam(value="sortField", defaultValue="id") String sortField,

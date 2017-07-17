@@ -44,6 +44,11 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
+    public Exam updateExam(Exam exam) {
+        return examDao.save(exam);
+    }
+
+    @Override
     // TODO 组卷，目前提供一种测试的组卷内容
     public List<Question> formPaper () {
         ExamRule rule = new ExamRule(20, 3.0, 10, 0, 0, 0);
@@ -78,6 +83,6 @@ public class ExamServiceImpl implements ExamService {
 
     @Override
     public List<Exam> getExamsByUser (User user) {
-        return examDao.findByUserAAndAlive(user, 1);
+        return examDao.findByUserAndAlive(user, 1);
     }
 }

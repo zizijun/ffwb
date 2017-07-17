@@ -12,5 +12,5 @@ import java.util.List;
 public interface ExamDao extends JpaRepository<Exam, Long> {
     Exam findByUserAndName (User user, String name);
     Exam findByIdAndAlive (long examId, int alive);
-    List<Exam> findByUserAAndAlive (User user, int alive);
+    List<Exam> findByUserAndAlive (User user, int alive);
 }

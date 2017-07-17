@@ -28,7 +28,7 @@ public class QuestionDTO {
     /**
      * 类型
      */
-    private String type;
+    private int type;
 
     /**
      * 标签 java／前端
@@ -69,11 +69,11 @@ public class QuestionDTO {
         this.solution = solution;
     }
 
-    public String getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 

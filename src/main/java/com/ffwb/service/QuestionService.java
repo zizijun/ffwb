@@ -16,7 +16,7 @@ public interface QuestionService {
 
     PageListModel getAllQuestions(int pageIndex, int pageSize, String sortField, String sortOrder);
 
-    PageListModel getQuestionsByConditions(String label, String type, int pageIndex, int pageSize, String sortField, String sortOrder);
+    PageListModel getQuestionsByConditions(String label, int type, int pageIndex, int pageSize, String sortField, String sortOrder);
 
 //    boolean labelQuestions(List<QuestionDTO> dto);
 
@@ -26,5 +26,5 @@ public interface QuestionService {
 
     int deleteQuestions(List<QuestionDTO> dto);
 
-    List<Question> getQuestionByTag(String type, Tag tag);
+    List<Question> getQuestionByTag(int type, Tag tag);
 }

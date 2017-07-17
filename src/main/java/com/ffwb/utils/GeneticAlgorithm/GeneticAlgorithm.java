@@ -88,7 +88,7 @@ public class GeneticAlgorithm {
             if (!child.containsQuestion(parent2.getQuestion(i))) {
                 child.setQuestion(i, parent2.getQuestion(i));
             } else {
-                String type = getTypeByIndex(i, examRule);
+                int type = getTypeByIndex(i, examRule);
                 // TODO 从数据库中寻找符合条件的候选题目，通过type和标签
 //                Question[] singleArray = QuestionService.getQuestionArray(type, idString.substring(1, idString.indexOf("]")));
 
@@ -100,7 +100,7 @@ public class GeneticAlgorithm {
             if (!child.containsQuestion(parent2.getQuestion(i))) {
                 child.setQuestion(i, parent2.getQuestion(i));
             } else {
-                String type = getTypeByIndex(i, examRule);
+                int type = getTypeByIndex(i, examRule);
                 // TODO 寻找符合条件的候选题目，通过type和标签
 //                Question[] singleArray = QuestionService.getQuestionArray(type, idString.substring(1, idString.indexOf("]")));
                 List<Question> singleArray = questionService.getQuestionByTag(type, examRule.getKnowledgePoints().get(0));
@@ -111,20 +111,20 @@ public class GeneticAlgorithm {
         return child;
     }
 
-    private static String getTypeByIndex(int index, ExamRule examRule) {
-        String type;
+    private static int getTypeByIndex(int index, ExamRule examRule) {
+        int type;
         // 单选
         if (index < examRule.getSingleChoiceCount()) {
-            type = "1";
+            type = 1;
         } else if (index < examRule.getSingleChoiceCount() + examRule.getGapFillingCount()) {
             // 填空
-            type = "2";
+            type = 2;
         } else if (index < examRule.getSingleChoiceCount() + examRule.getGapFillingCount() + examRule.getCheckCount()) {
             // 判断
-            type = "3";
+            type = 3;
         } else {
             // 编程
-            type = "4";
+            type = 4;
         }
         return type;
     }

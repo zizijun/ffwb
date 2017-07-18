@@ -45,6 +45,11 @@ public class QuestionDTO {
      */
     Map optionJson;
 
+    /**
+     * Answer id
+     */
+    long answerId;
+
     public Long getId() {
         return id;
     }
@@ -99,5 +104,13 @@ public class QuestionDTO {
 
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
+    }
+
+    public long getAnswerId() {
+        return answerId;
+    }
+
+    public void setAnswerId(long answerId) {
+        this.answerId = answerId;
     }
 }

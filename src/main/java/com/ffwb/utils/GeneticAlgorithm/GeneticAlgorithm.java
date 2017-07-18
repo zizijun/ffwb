@@ -3,13 +3,16 @@ package com.ffwb.utils.GeneticAlgorithm;
 import com.ffwb.entity.Question;
 import com.ffwb.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by dearlhd on 2017/7/11.
  */
+@Component
 public class GeneticAlgorithm {
     /**
      * 变异概率
@@ -25,24 +28,31 @@ public class GeneticAlgorithm {
     private static final int tournamentSize = 5;
 
     @Autowired
-    static private QuestionService questionService;
+    private QuestionService qService;
+
+    private static QuestionService questionService;
+
+    @PostConstruct
+    public void initService () {
+        questionService = qService;
+    }
 
     /**
      * TODO 进化种群
      */
-    public static Population evolvePopulation(Population pop, ExamRule examRule) {
-        Population newPopulation = new Population(pop.getLength());
+    public static List<Paper> evolvePopulation(Population pop, ExamRule examRule) {
+        List<Paper> papers = new ArrayList<>();
         int elitismOffset;
         // 精英主义
         if (elitism) {
             elitismOffset = 1;
             // 保留上一代最优秀个体
-            Paper fitness = pop.getFittest();
-            fitness.setId(0);
-            newPopulation.setPaper(0, fitness);
+            Paper fittest = pop.getFittest();
+            fittest.setId(0);
+            papers.add(fittest);
         }
-        // 种群交叉操作，从当前的种群pop来创建下一代种群newPopulation
-        for (int i = elitismOffset; i < newPopulation.getLength(); i++) {
+        // 种群交叉操作，从当前的种群pop来创建下一代种群
+        for (int i = elitismOffset; i < pop.getLength(); i++) {
             // 较优选择parent
             Paper parent1 = select(pop);
             Paper parent2 = select(pop);
@@ -52,18 +62,18 @@ public class GeneticAlgorithm {
             // 交叉
             Paper child = crossover(parent1, parent2, examRule);
             child.setId(i);
-            newPopulation.setPaper(i, child);
+            papers.add(i, child);
         }
         // 种群变异操作
         Paper tmpPaper;
-        for (int i = elitismOffset; i < newPopulation.getLength(); i++) {
-            tmpPaper = newPopulation.getPaper(i);
+        for (int i = elitismOffset; i < papers.size(); i++) {
+            tmpPaper = papers.get(i);
             mutate(tmpPaper);
             // 计算知识点覆盖率与适应度
             tmpPaper.setKpCoverage(examRule);
             tmpPaper.setFitness(examRule, 0.3, 0.7);
         }
-        return newPopulation;
+        return papers;
     }
 
     /**
@@ -158,10 +168,17 @@ public class GeneticAlgorithm {
      * TODO 选择
      */
     private static Paper select(Population population) {
-        Population pop = new Population(tournamentSize);
+        List<Paper> papers = new ArrayList<>();
         for (int i = 0; i < tournamentSize; i++) {
-            pop.setPaper(i, population.getPaper((int) (Math.random() * population.getLength())));
+            papers.add(population.getPaper((int) (Math.random() * population.getLength())));
         }
-        return pop.getFittest();
+
+        Paper paper = papers.get(0);
+        for (int i = 1; i < papers.size(); i++) {
+            if (paper.getFitness() < papers.get(i).getFitness()) {
+                paper = papers.get(i);
+            }
+        }
+        return paper;
     }
 }

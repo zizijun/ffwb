@@ -1,11 +1,10 @@
 package com.ffwb.service.impl;
 
 import com.ffwb.dao.ExamDao;
-import com.ffwb.entity.Answer;
-import com.ffwb.entity.Exam;
-import com.ffwb.entity.Question;
-import com.ffwb.entity.User;
+import com.ffwb.dao.UserDao;
+import com.ffwb.entity.*;
 import com.ffwb.service.ExamService;
+import com.ffwb.service.TagService;
 import com.ffwb.utils.GeneticAlgorithm.ExamRule;
 import com.ffwb.utils.GeneticAlgorithm.GeneticAlgorithm;
 import com.ffwb.utils.GeneticAlgorithm.Paper;
@@ -27,14 +26,29 @@ import java.util.List;
 @Service("ExamService")
 public class ExamServiceImpl implements ExamService {
     @Autowired
-    ExamDao examDao;
+    private ExamDao examDao;
+
+    @Autowired
+    private UserDao userDao;
+
+    @Autowired
+    private TagService tagService;
+
+    @Autowired
+    private Population population;
 
     protected final Log logger = LogFactory.getLog(getClass());
 
     @Override
     public Exam createExam(Exam exam) {
         Exam newExam = new Exam();
-        newExam.setId(-1L);
+        newExam.setId(-1);
+
+        User user = userDao.findByIdAndAlive(exam.getUser().getId(), 1);
+        if (user == null) {
+            return newExam;
+        }
+        exam.setUser(user);
         if (examDao.findByUserAndName(exam.getUser(), exam.getName()) != null) {
             return newExam;
         }
@@ -65,7 +79,9 @@ public class ExamServiceImpl implements ExamService {
     @Override
     // TODO 组卷，目前提供一种测试的组卷内容
     public List<Question> formPaper () {
-        ExamRule rule = new ExamRule(20, 3.0, 10, 0, 0, 0);
+        List<Tag> tags = tagService.findAllAlive(1);
+
+        ExamRule rule = new ExamRule(10, 3.0, 5, 0, 0, 0, tags);
 
         // 迭代计数器
         int count = 0;
@@ -75,7 +91,7 @@ public class ExamServiceImpl implements ExamService {
         double expectation = 0.98;
 
         // 按照条件使用遗传算法组卷
-        Population population = new Population(20, rule);
+        population.init(5, rule);
 
         logger.info("初次适应度: " + population.getFittest().getFitness());
 
@@ -83,7 +99,7 @@ public class ExamServiceImpl implements ExamService {
             if (population.getFittest().getFitness() >= expectation) {
                 break;
             }
-            population = GeneticAlgorithm.evolvePopulation(population, rule);
+            population.setPapers(GeneticAlgorithm.evolvePopulation(population, rule));
             logger.info("第" + count + "次进化后，适应度为： " + population.getFittest().getFitness());
         }
         Paper paper = population.getFittest();

@@ -1,6 +1,7 @@
 package com.ffwb.controller;
 
 import com.ffwb.DTO.ExamDTO;
+import com.ffwb.DTO.PaperDTO;
 import com.ffwb.DTO.QuestionDTO;
 import com.ffwb.entity.Answer;
 import com.ffwb.entity.Exam;
@@ -53,13 +54,25 @@ public class ExamController extends ApiController{
 
     /**
      * 生成试题
+     * TODO 返回的数据类型需完善
      */
     @RequestMapping(value = "/exam/generate", method = RequestMethod.POST)
     @ResponseBody
     public ServiceResult generateExam (@RequestBody ExamDTO examDTO) throws Exception {
         Exam exam = examService.findExamById(examDTO.getExamId());
-        User user = userService.findUserById(examDTO.getUserId());
+        User user = exam.getUser();
         int totalScore = examDTO.getTotalScore();
+
+        PaperDTO paperDTO = new PaperDTO();
+        paperDTO.setExam(exam);
+
+        List<Answer> answers = answerService.getAnswersByExam(exam);
+        if (answers != null) {
+            List<QuestionDTO> questionDTOs = new ArrayList<>();
+            for (int i = 0; i < answers.size(); i++) {
+
+            }
+        }
 
         // 组卷，获取题目
         List<Question> questions = examService.formPaper();
@@ -76,7 +89,10 @@ public class ExamController extends ApiController{
 
         List<QuestionDTO> questionDTOs = question2Dto(questions);
 
-        return ServiceResult.success(questionDTOs);
+
+        paperDTO.setQuestions(questionDTOs);
+
+        return ServiceResult.success(paperDTO);
     }
 
     /**

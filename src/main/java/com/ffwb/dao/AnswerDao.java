@@ -12,6 +12,8 @@ import java.util.List;
  * Created by jinchuyang on 2017/7/14.
  */
 public interface AnswerDao extends JpaRepository<Answer, Long>{
-    List<Answer> findByUserAndAlive(User user, int live);
+    List<Answer> findByUserAndAlive(User user, int alive);
     Answer findByExamAndQuestionAndAlive (Exam exam, Question question, int alive);
+
+    List<Answer> findByExamAndAlive (Exam exam, int alive);
 }

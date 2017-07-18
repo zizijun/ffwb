@@ -1,7 +1,12 @@
 package com.ffwb.utils.GeneticAlgorithm;
 
 import com.ffwb.entity.Question;
+import com.ffwb.entity.Tag;
+import com.ffwb.service.QuestionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -11,50 +16,54 @@ import java.util.Random;
  * 遗传算法中的种群
  * 表示多份试卷的合集
  */
+@Component
 public class Population {
+    @Autowired
+    private QuestionService questionService;
+
     private List<Paper> papers;
 
-    public Population (int size) {
+    public void init (int size) {
         papers = new ArrayList<>(size);
     }
 
-    public Population (int size, ExamRule examRule) {
-        papers = new ArrayList<>(size);
+    public void init (int size, ExamRule rule) {
+        papers = new ArrayList<>();
         Paper paper;
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             paper = new Paper();
             paper.setId(i + 1);
-            while (paper.getTotalScore() != examRule.getTotalScore()) {
+            while (paper.getTotalScore() != rule.getTotalScore()) {
                 paper.getQuestions().clear();
-                String idString = examRule.getKnowledgePoints().toString();
+                String idString = rule.getKnowledgePoints().toString();
                 // 单选题
-                if (examRule.getSingleChoiceCount() > 0) {
-                    generateQuestion(1, random, examRule.getSingleChoiceCount(), 2, idString,
+                if (rule.getSingleChoiceCount() > 0) {
+                    generateQuestion(1, random, rule.getSingleChoiceCount(), 2, rule.getKnowledgePoints(),
                             "单选题数量不够，组卷失败", paper);
                 }
                 // 填空题
-                if (examRule.getGapFillingCount() > 0) {
-                    generateQuestion(2, random, examRule.getGapFillingCount(), 2, idString,
+                if (rule.getGapFillingCount() > 0) {
+                    generateQuestion(2, random, rule.getGapFillingCount(), 2, rule.getKnowledgePoints(),
                             "填空题数量不够，组卷失败", paper);
                 }
 
                 // 判断题
-                if (examRule.getCheckCount() > 0) {
-                    generateQuestion(3, random, examRule.getCheckCount(), 2, idString,
-                            "填空题数量不够，组卷失败", paper);
+                if (rule.getCheckCount() > 0) {
+                    generateQuestion(3, random, rule.getCheckCount(), 2, rule.getKnowledgePoints(),
+                            "判断题数量不够，组卷失败", paper);
                 }
                 // 编程题
-                if (examRule.getProgrammingCount() > 0) {
-                    generateQuestion(4, random, examRule.getProgrammingCount(), 15, idString,
+                if (rule.getProgrammingCount() > 0) {
+                    generateQuestion(4, random, rule.getProgrammingCount(), 15, rule.getKnowledgePoints(),
                             "编程题数量不够，组卷失败", paper);
                 }
             }
             // 计算试卷知识点覆盖率
-            paper.setKpCoverage(examRule);
+            paper.setKpCoverage(rule);
             // TODO 计算试卷适应度
-            paper.setFitness(examRule, 0.3, 0.7);
-            papers.set(i, paper);
+            paper.setFitness(rule, 0.3, 0.7);
+            papers.add(paper);
         }
     }
 
@@ -62,23 +71,22 @@ public class Population {
      * 初始化试题
      * TODO 如何初始化
      */
-    private void generateQuestion(int type, Random random, int questionCount, int score, String labels,
+    private void generateQuestion(int type, Random random, int questionCount, int score, List<Tag> tags,
                                   String errorMsg, Paper paper) {
-        // TODO 从数据库获取试题库
-        Question[] questions = null;
-        if (questions.length < questionCount) {
+        List<Question> questions = questionService.getQuestionByTag(type, tags);
+        if (questions == null || questions.size() < questionCount) {
             return;
         }
         Question tmpQuestion;
         for (int j = 0; j < questionCount; j++) {
-            int index = random.nextInt(questions.length - j);
+            int index = random.nextInt(questions.size() - j);
             // 初始化分数
-            questions[index].setScore(score);
-            paper.addQuestion(questions[index]);
+            questions.get(index).setScore(score);
+            paper.addQuestion(questions.get(index));
             // 保证不会重复添加试题
-            tmpQuestion = questions[questions.length - j - 1];
-            questions[questions.length - j - 1] = questions[index];
-            questions[index] = tmpQuestion;
+            tmpQuestion = questions.get(questions.size() - j - 1);
+            questions.set(questions.size() - j - 1, questions.get(index));
+            questions.set(index, tmpQuestion);
         }
     }
 
@@ -124,5 +132,13 @@ public class Population {
      */
     public int getLength() {
         return papers.size();
+    }
+
+    public void setPapers (List<Paper> papers) {
+        this.papers = papers;
+    }
+
+    public List<Paper> getPapers () {
+        return papers;
     }
 }

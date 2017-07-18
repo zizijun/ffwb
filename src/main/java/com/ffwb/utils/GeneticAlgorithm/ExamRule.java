@@ -49,13 +49,14 @@ public class ExamRule {
 
     }
 
-    public ExamRule (int totalScore, double difficulty, int singleChoiceCount, int gapFillingCount, int checkCount, int programmingCount) {
+    public ExamRule (int totalScore, double difficulty, int singleChoiceCount, int gapFillingCount, int checkCount, int programmingCount, List<Tag> knowledgePoints) {
         this.totalScore = totalScore;
         this.difficulty = difficulty;
         this.singleChoiceCount = singleChoiceCount;
         this.gapFillingCount = gapFillingCount;
         this.checkCount = checkCount;
         this.programmingCount = programmingCount;
+        this.knowledgePoints = knowledgePoints;
     }
 
     public int getTotalScore() {

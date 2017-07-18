@@ -42,7 +42,7 @@
 * 参数：
 
   ```json
-  RequestParam: userId,examId
+  RequestParam: examId, totalScore
   ```
 
 * 返回：

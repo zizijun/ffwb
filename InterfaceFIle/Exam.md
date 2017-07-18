@@ -50,7 +50,19 @@
   ```json
   {
    "code": 200,
-   "data": [
+   "data": {
+     "id":1,
+     "name":"试卷1",
+     "totalTime":60,
+     "mode":1,
+     "costTime":-1,
+     "totalScore":-1,
+     "grade": -1,
+     "userId": 1,
+     "startTime":"",
+     "endTime":"",
+     "alive": 1,
+     "questionList": [
        {
          "id": 7,
          "description": "下列哪一个是合法的标识符：",
@@ -77,44 +89,12 @@
        }
        ...
      ]
+   }
   }
   ```
 
 
-### 获取一场考试信息
 
-* URL /api/exam/one
-
-* Method: GET
-
-* 参数
-
-  ```
-  RequestParam: userId,examId（返回对应的考试的基本信息）
-  ```
-
-* 返回
-
-  ```json
-  {
-    "code":200,
-    "data":{
-      "id":1,
-      "name":"试卷1",
-      "totalTime":60,
-      "mode":1,
-      "costTime":-1,
-      "totalScore":-1,
-      "grade": -1,
-      "userId": 1,
-   	  "startTime":"",
-      "endTime":"",
-      "alive": 1
-    }
-  }
-  ```
-
-  ​
 
 ### 获取所有考试
 
@@ -278,3 +258,7 @@
     }
   }
   ```
+
+
+
+    ​

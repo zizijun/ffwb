@@ -62,9 +62,9 @@
      "startTime":"",
      "endTime":"",
      "alive": 1,
-     "questionList": [
+     "questions": [
        {
-         "id": 7,
+         "id": 7,   // 这条属性在本接口中是无效的
          "description": "下列哪一个是合法的标识符：",
          "type": "选择题",
          "label": "java",
@@ -85,7 +85,8 @@
            "B": "+viod",
            "C": "-5",
            "D": "_black"
-         }
+         },
+         "answerId":1    // 记录answer的id，用于添加解答
        }
        ...
      ]

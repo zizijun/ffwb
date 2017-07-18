@@ -48,7 +48,7 @@ public class QuestionDTO {
     /**
      * Answer id
      */
-    long answerId;
+    private long answerId;
 
     public Long getId() {
         return id;

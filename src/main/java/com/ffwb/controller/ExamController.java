@@ -68,14 +68,21 @@ public class ExamController extends ApiController{
 
         List<Answer> answers = answerService.getAnswersByExam(exam);
         if (answers != null) {
-            List<QuestionDTO> questionDTOs = new ArrayList<>();
-            for (int i = 0; i < answers.size(); i++) {
-
+            List<Question> questions = new ArrayList<>();
+            for (Answer answer : answers) {
+                questions.add(answer.getQuestion());
             }
+            List<QuestionDTO> questionDTOs = question2Dto(questions);
+            for (int i = 0; i < questionDTOs.size(); i++) {
+                questionDTOs.get(i).setAnswerId(answers.get(i).getId());
+            }
+            paperDTO.setQuestions(questionDTOs);
+            return ServiceResult.success(paperDTO);
         }
 
         // 组卷，获取题目
         List<Question> questions = examService.formPaper();
+        List<QuestionDTO> questionDTOs = question2Dto(questions);
 
         // 生成对应的空的解答
         for (int i = 0; i < questions.size(); i++) {
@@ -84,11 +91,9 @@ public class ExamController extends ApiController{
             answer.setUser(user);
             answer.setQuestion(questions.get(i));
             answer.setAlive(1);
-            answerService.addAnswer(answer);
+            answer = answerService.addAnswer(answer);
+            questionDTOs.get(i).setAnswerId(answer.getId());
         }
-
-        List<QuestionDTO> questionDTOs = question2Dto(questions);
-
 
         paperDTO.setQuestions(questionDTOs);
 
@@ -128,7 +133,7 @@ public class ExamController extends ApiController{
     }
 
     /**
-     * pojo2dto
+     * question2dto
      * @param questions
      * @return
      */
@@ -136,7 +141,6 @@ public class ExamController extends ApiController{
         List<QuestionDTO> questionDTOList = new ArrayList<QuestionDTO>();
         for (Question question :questions){
             QuestionDTO dto = new QuestionDTO();
-            dto.setId(question.getId());
             dto.setDescription(question.getDescription());
             dto.setSolution(question.getSolution());
             dto.setType(question.getType());

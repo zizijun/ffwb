@@ -26,8 +26,8 @@
       "totalScore":-1,
       "grade": -1,
       "userId": 1,
-	  "startTime":"",
-	  "endTime":"",
+      "startTime":"",
+      "endTime":"",
       "alive": 1
     }
   }
@@ -50,7 +50,19 @@
   ```json
   {
    "code": 200,
-   "data": [
+   "data": {
+     "id":1,
+     "name":"试卷1",
+     "totalTime":60,
+     "mode":1,
+     "costTime":-1,
+     "totalScore":-1,
+     "grade": -1,
+     "userId": 1,
+     "startTime":"",
+     "endTime":"",
+     "alive": 1,
+     "questionList": [
        {
          "id": 7,
          "description": "下列哪一个是合法的标识符：",
@@ -77,8 +89,11 @@
        }
        ...
      ]
+   }
   }
   ```
+
+
 
 
 ### 获取所有考试
@@ -108,8 +123,8 @@
           "totalScore":-1,
           "grade": -1,
           "userId": 1,
-		  "startTime":"2017-7-16 10:00:00",
-		  "endTime":"2017-7-16 10:28:58",
+  	      "startTime":"2017-7-16 10:00:00",
+  	      "endTime":"2017-7-16 10:28:58",
           "alive": 1
         },
         ...
@@ -140,14 +155,14 @@
   {
     "code":200,
     "data":{
-	  "id":1,
-	  "userId":1,
-	  "examId":1,
-	  "questionId"7,
-	  "answer":"A,B",
-	  "isRight":false,
-	  "alive":1
-	}
+    "id":1,
+    "userId":1,
+    "examId":1,
+    "questionId":7,
+    "answer":"A,B",
+    "isRight":false,
+    "alive":1
+  }
   }
   ```
 
@@ -243,3 +258,7 @@
     }
   }
   ```
+
+
+
+    ​

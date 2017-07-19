@@ -3,6 +3,11 @@ package com.ffwb.service.impl;
 import com.ffwb.DTO.QuestionDTO;
 import com.ffwb.dao.*;
 import com.ffwb.entity.*;
+import com.ffwb.hanlp.HanLP;
+import com.ffwb.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
+import com.ffwb.hanlp.dictionary.CoreDictionary;
+import com.ffwb.hanlp.dictionary.CustomDictionary;
+import com.ffwb.hanlp.seg.common.Term;
 import com.ffwb.model.PageListModel;
 import com.ffwb.service.QuestionService;
 import com.ffwb.utils.ExcelReader;
@@ -43,6 +48,11 @@ public class QuestionServiceImpl implements QuestionService {
     private AnalysisDao analysisDao;
     @Autowired
     private UserDao userDao;
+
+
+
+    private  String keywordDictionaryPath = "data/dictionary/keyword/keyword.txt";
+
     /**
      * 上传试卷 试题
      * @param multipartFile
@@ -421,6 +431,94 @@ public class QuestionServiceImpl implements QuestionService {
             question.setOptionJson(JsonType.simpleMapToJsonStr(questionDTO.getOptionJson()));
         }
         return question;
+    }
+
+    @Override
+    public void convertSolution(){
+        List<Question> questions = questionDao.findAll();
+        for (Question question : questions){
+            String solution = question.getSolution().split(":")[1];
+            //String solution = "正确答案:ABCD";
+            //List<String> solutionList = new ArrayList<String>();
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < solution.length(); i++){
+                sb.append(solution.substring(i, i+1)).append(" ");
+            }
+            question.setSolution(sb.substring(0, sb.length()-1));
+            questionDao.save(question);
+        }
+    }
+
+    private int judgeQuestion(Answer answer) throws IOException {
+        Question question = answer.getQuestion();
+        if(question.getType() ==1){ //选择题
+            String[] solutions = question.getSolution().split(" ");
+            String[] answers = answer.getAnswer().split(" ");
+            if (solutions.length == answers.length){
+                boolean isRight = true;
+                for (String str : solutions){
+                    if(!Arrays.asList(answers).contains(str)){
+                        isRight = false;
+                    }
+                }
+                if (isRight){
+                    return question.getScore();
+                }
+            }
+            return 0;
+
+        }
+        if (question.getType() == 3){//判断题
+
+        }
+        if (question.getType() == 4){//简答题
+            List<String> keywords = getKeywords();
+            for (String keyword: keywords) {
+                CustomDictionary.add(keyword);
+            }
+            String solution = question.getSolution();
+            String answerContent = answer.getAnswer();
+
+            CustomDictionary.add("封装");
+            CustomDictionary.add("继承");
+            CustomDictionary.add("多态");
+
+            //分词
+            List<Term> solutionTerms = HanLP.segment(solution);
+            List<Term> answerTerms = HanLP.segment(answerContent);
+            Set<String> solutionKeywords = new HashSet<>();
+            Set<String> answerKeywords = new HashSet<>();
+
+            for (Term term: solutionTerms){//获取答案中关键词个数
+                if (keywords.contains(term.word)){
+                    solutionKeywords.add(term.word);
+                }
+            }
+            for (Term term: answerTerms){//获取解答中关键词个数
+                if (keywords.contains(term.word)){
+                    answerKeywords.add(term.word);
+                }
+            }
+            return (int)Math.round(question.getScore() * (answerKeywords.size())/(solutionKeywords.size() *1.0));
+        }
+
+        return 0;
+
+    }
+
+    private List<String> getKeywords() throws IOException {
+        List<String> keywords = new ArrayList<>();
+
+        File input = new File(keywordDictionaryPath);
+        InputStream is = new FileInputStream(input);
+        InputStreamReader isr = new InputStreamReader(is);
+        BufferedReader br = new BufferedReader(isr);
+        StringBuffer sb = new StringBuffer();
+        String temp = null;
+        while((temp = br.readLine()) != null) {
+            keywords.add(temp);
+        }
+        return keywords;
     }
 
 }

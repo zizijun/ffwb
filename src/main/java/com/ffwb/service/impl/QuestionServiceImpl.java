@@ -12,6 +12,7 @@ import com.ffwb.model.PageListModel;
 import com.ffwb.service.QuestionService;
 import com.ffwb.utils.ExcelReader;
 import com.ffwb.utils.JsonType;
+import com.ffwb.utils.TagBuilt;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -148,6 +149,7 @@ public class QuestionServiceImpl implements QuestionService {
                 question.setSolution(solution);//正确答案：A
                 int count = 0;
                 Map<String, String> map = new HashMap<String, String>();
+                String tmpOption="";
                 lineStr = br.readLine();
                 while (lineStr.substring(0, 4).equals("选项描述")) {
                     if (lineStr.length() > 7 && lineStr.substring(6, 8).equals("添加"))
@@ -166,6 +168,7 @@ public class QuestionServiceImpl implements QuestionService {
                             break;
                         }
                     }
+                    tmpOption=option;
                     map.put(ch.toString(), option);
                 }
                 question.setOptionJson(JsonType.simpleMapToJsonStr(map));
@@ -174,6 +177,19 @@ public class QuestionServiceImpl implements QuestionService {
                 question.setType(1);
                 question.setDifficulty(3.0);
                 question.setScore(2);
+
+                //处理关于tag标签
+                String desAndOp=description+tmpOption;
+                Set<String> tmpTag= TagBuilt.isWhat(desAndOp);
+                Set<Tag> theTags=new HashSet<>();
+                for(String s:tmpTag){
+//                    Tag tag=new Tag();
+//                    tag.setContent(s);
+//                    tag.setAlive(1);
+                    Tag tag=tagDao.findByContentAndAlive(s,1);
+                    theTags.add(tag);
+                }
+                question.setTags(theTags);
                 questionDao.save(question);
                 questions.add(question);
                 while (!(lineStr = br.readLine()).equals("纠错")) {

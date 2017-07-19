@@ -66,12 +66,14 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public Exam finishExam(long examId) throws ParseException {
-        Exam exam = examDao.findByIdAndAlive(examId, 1);
+    public Exam finishExam(Exam exam) throws ParseException {
+        int costTime = exam.getCostTime();
+        exam = examDao.findByIdAndAlive(exam.getId(), 1);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String date = df.format(new Date());
         Date d = df.parse(date);
         exam.setEndTime(d);
+        exam.setCostTime(costTime);
         exam = examDao.save(exam);
         return exam;
     }

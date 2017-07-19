@@ -6,10 +6,16 @@
 
 - Method: POST
 
-- 参数
+- 参数 
 
-  ```
-  RequestParam: name,totalTime,mode,userId,label
+  ```json
+  {
+  	"name" : "exam3",
+	""totalScore" : 20,
+  	"user" : {
+  		"id":1
+  	}
+  }
   ```
 
 - 返回：
@@ -42,7 +48,10 @@
 * 参数：
 
   ```json
-  RequestParam: examId, totalScore
+  {
+    "examId" : 3
+  }
+
   ```
 
 * 返回：
@@ -135,19 +144,24 @@
 
 ### 答题
 
-* URL /api/anwser
+* URL /api/anwser/add
 
 * Method: POST
 
 * 参数
 
   ``` json
-  {
-    "userId":1,
-    "examId":1,
-    "questionId":7,
-    "answer":"A,B"
-  }
+  [
+    {
+        "id":7,
+        "answer":"A,B"
+    },
+    {
+        "id":8,
+        "answer":"A"
+    }
+    ...
+    ]
   ```
 
 * 返回
@@ -156,14 +170,14 @@
   {
     "code":200,
     "data":{
-    "id":1,
-    "userId":1,
-    "examId":1,
-    "questionId":7,
-    "answer":"A,B",
-    "isRight":false,
-    "alive":1
-  }
+        "id":1,
+        "userId":1,
+        "examId":1,
+        "questionId":7,
+        "answer":"A,B",
+        "isRight":false,
+        "alive":1
+      }
   }
   ```
 

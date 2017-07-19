@@ -58,10 +58,9 @@ public class ExamController extends ApiController{
      */
     @RequestMapping(value = "/exam/generate", method = RequestMethod.POST)
     @ResponseBody
-    public ServiceResult generateExam (@RequestBody ExamDTO examDTO) throws Exception {
-        Exam exam = examService.findExamById(examDTO.getExamId());
+    public ServiceResult generateExam (@RequestBody Exam exam) throws Exception {
+        exam = examService.findExamById(exam.getId());
         User user = exam.getUser();
-        int totalScore = examDTO.getTotalScore();
 
         PaperDTO paperDTO = new PaperDTO();
         paperDTO.setExam(exam);
@@ -116,9 +115,10 @@ public class ExamController extends ApiController{
      */
     @RequestMapping(value = "/answer/add", method = RequestMethod.POST)
     @ResponseBody
-    public ServiceResult resolve (@RequestBody Answer answer) throws Exception {
-        Answer ret = answerService.updateAnswer(answer); // ret 为空是表示不存在
-        return ServiceResult.success(ret);
+    public ServiceResult resolve (@RequestBody List<Answer> answers) throws Exception {
+        int count = answerService.updateAnswers(answers); // ret 为空是表示不存在
+        String str = "成功提交了" + count + "条回答,失败" + (answers.size() - count) + "条。" ;
+        return ServiceResult.success(str);
     }
 
     /**
@@ -126,9 +126,10 @@ public class ExamController extends ApiController{
      */
     @RequestMapping(value = "/exam/finish", method = RequestMethod.POST)
     @ResponseBody
-    public ServiceResult finishExam (@RequestBody ExamDTO examDTO) throws Exception {
-        checkParameter(examDTO!=null, "exam is null");
-        Exam exam = examService.finishExam(examDTO.getExamId());
+    public ServiceResult finishExam (@RequestBody Exam exam) throws Exception {
+        checkParameter(exam!=null, "exam is null");
+        exam = examService.finishExam(exam);
+        // TODO 批改
         return ServiceResult.success(exam);
     }
 

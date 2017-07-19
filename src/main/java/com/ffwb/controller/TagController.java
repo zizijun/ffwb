@@ -48,4 +48,18 @@ public class TagController extends ApiController{
         }
 
     }
+
+    /**
+     * 初始化标签（java，web前端）
+     * @return
+     */
+    @RequestMapping(value="/tag/init",method=RequestMethod.POST)
+    @ResponseBody
+    public ServiceResult initTags(@RequestBody String category){
+        checkParameter(category!=null,"没有选择标签初始化的类别（如java,front-end）");
+        int res=tagService.addTagByCategory(category);
+        if(res==0)
+            return ServiceResult.fail("初始化失败");
+        else return ServiceResult.success("成功初始化"+res+"条标签");
+    }
 }

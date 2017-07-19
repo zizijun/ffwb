@@ -36,7 +36,7 @@ public class TagServiceImpl implements TagService {
         int size=tags.length;
         List<Tag> l=new ArrayList<>();
         for(int i=0;i<size;i++){
-            if(!(tagDao.findByContentAndAlive(tags[i],1))){
+            if((tagDao.findByContentAndAlive(tags[i],1))==null){
                 Tag tag=new Tag();
                 tag.setAlive(1);
                 tag.setContent(tags[i]);

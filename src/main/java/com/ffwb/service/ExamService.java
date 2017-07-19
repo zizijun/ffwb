@@ -22,5 +22,5 @@ public interface ExamService {
 
     Exam updateExam (Exam exam);
 
-    Exam finishExam(long examId) throws ParseException;
+    Exam finishExam(Exam exam) throws ParseException;
 }

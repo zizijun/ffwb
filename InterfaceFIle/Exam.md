@@ -6,10 +6,16 @@
 
 - Method: POST
 
-- 参数
+- 参数 
 
-  ```
-  RequestParam: name,totalTime,mode,userId,label
+  ```json
+  {
+  	"name" : "exam3",
+	""totalScore" : 20,
+  	"user" : {
+  		"id":1
+  	}
+  }
   ```
 
 - 返回：
@@ -42,7 +48,10 @@
 * 参数：
 
   ```json
-  RequestParam: examId, totalScore
+  {
+    "examId" : 3
+  }
+
   ```
 
 * 返回：

@@ -58,10 +58,9 @@ public class ExamController extends ApiController{
      */
     @RequestMapping(value = "/exam/generate", method = RequestMethod.POST)
     @ResponseBody
-    public ServiceResult generateExam (@RequestBody ExamDTO examDTO) throws Exception {
-        Exam exam = examService.findExamById(examDTO.getExamId());
+    public ServiceResult generateExam (@RequestBody Exam exam) throws Exception {
+        exam = examService.findExamById(exam.getId());
         User user = exam.getUser();
-        int totalScore = examDTO.getTotalScore();
 
         PaperDTO paperDTO = new PaperDTO();
         paperDTO.setExam(exam);
@@ -126,9 +125,9 @@ public class ExamController extends ApiController{
      */
     @RequestMapping(value = "/exam/finish", method = RequestMethod.POST)
     @ResponseBody
-    public ServiceResult finishExam (@RequestBody ExamDTO examDTO) throws Exception {
-        checkParameter(examDTO!=null, "exam is null");
-        Exam exam = examService.finishExam(examDTO.getExamId());
+    public ServiceResult finishExam (@RequestBody Exam exam) throws Exception {
+        checkParameter(exam!=null, "exam is null");
+        exam = examService.finishExam(exam);
         return ServiceResult.success(exam);
     }
 

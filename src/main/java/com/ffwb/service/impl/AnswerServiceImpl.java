@@ -43,6 +43,22 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
+    public int updateAnswers (List<Answer> answers) {
+        int successCount = 0;
+        for (Answer answer : answers) {
+            Answer temp = answerDao.findByIdAndAlive(answer.getId(), 1);
+            if (temp == null) {
+                continue;
+            }
+            temp.setAnswer(answer.getAnswer());
+            answerDao.save(temp);
+            successCount++;
+        }
+
+        return successCount;
+    }
+
+    @Override
     public boolean deleteAnswer(Answer answer) {
         answer.setAlive(0);
         if (updateAnswer(answer) == null) {

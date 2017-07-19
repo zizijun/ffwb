@@ -13,5 +13,5 @@ public interface TagDao extends JpaRepository<Tag, Long> {
 
     Tag findByIdAndAlive(long id, int alive);
 
-    boolean findByContentAndAlive(String content,int alive);
+    Tag findByContentAndAlive(String content,int alive);
 }

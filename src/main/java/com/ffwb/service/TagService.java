@@ -11,4 +11,6 @@ public interface TagService {
     List<Tag> findAllAlive(int alive);
 
     Tag addTag(Tag tag);
+
+    int addTagByCategory(String category);
 }

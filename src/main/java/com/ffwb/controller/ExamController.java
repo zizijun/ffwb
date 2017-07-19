@@ -1,6 +1,7 @@
 package com.ffwb.controller;
 
 import com.ffwb.DTO.ExamDTO;
+import com.ffwb.DTO.PaperDTO;
 import com.ffwb.DTO.QuestionDTO;
 import com.ffwb.entity.Answer;
 import com.ffwb.entity.Exam;
@@ -53,16 +54,35 @@ public class ExamController extends ApiController{
 
     /**
      * 生成试题
+     * TODO 返回的数据类型需完善
      */
     @RequestMapping(value = "/exam/generate", method = RequestMethod.POST)
     @ResponseBody
     public ServiceResult generateExam (@RequestBody ExamDTO examDTO) throws Exception {
         Exam exam = examService.findExamById(examDTO.getExamId());
-        User user = userService.findUserById(examDTO.getUserId());
+        User user = exam.getUser();
         int totalScore = examDTO.getTotalScore();
+
+        PaperDTO paperDTO = new PaperDTO();
+        paperDTO.setExam(exam);
+
+        List<Answer> answers = answerService.getAnswersByExam(exam);
+        if (answers != null) {
+            List<Question> questions = new ArrayList<>();
+            for (Answer answer : answers) {
+                questions.add(answer.getQuestion());
+            }
+            List<QuestionDTO> questionDTOs = question2Dto(questions);
+            for (int i = 0; i < questionDTOs.size(); i++) {
+                questionDTOs.get(i).setAnswerId(answers.get(i).getId());
+            }
+            paperDTO.setQuestions(questionDTOs);
+            return ServiceResult.success(paperDTO);
+        }
 
         // 组卷，获取题目
         List<Question> questions = examService.formPaper();
+        List<QuestionDTO> questionDTOs = question2Dto(questions);
 
         // 生成对应的空的解答
         for (int i = 0; i < questions.size(); i++) {
@@ -71,12 +91,13 @@ public class ExamController extends ApiController{
             answer.setUser(user);
             answer.setQuestion(questions.get(i));
             answer.setAlive(1);
-            answerService.addAnswer(answer);
+            answer = answerService.addAnswer(answer);
+            questionDTOs.get(i).setAnswerId(answer.getId());
         }
 
-        List<QuestionDTO> questionDTOs = question2Dto(questions);
+        paperDTO.setQuestions(questionDTOs);
 
-        return ServiceResult.success(questionDTOs);
+        return ServiceResult.success(paperDTO);
     }
 
     /**
@@ -112,7 +133,7 @@ public class ExamController extends ApiController{
     }
 
     /**
-     * pojo2dto
+     * question2dto
      * @param questions
      * @return
      */
@@ -120,7 +141,6 @@ public class ExamController extends ApiController{
         List<QuestionDTO> questionDTOList = new ArrayList<QuestionDTO>();
         for (Question question :questions){
             QuestionDTO dto = new QuestionDTO();
-            dto.setId(question.getId());
             dto.setDescription(question.getDescription());
             dto.setSolution(question.getSolution());
             dto.setType(question.getType());

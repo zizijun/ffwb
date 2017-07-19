@@ -17,7 +17,8 @@ import org.springframework.data.web.config.EnableSpringDataWebSupport;
 				"com.ffwb.controller",
 				"com.ffwb.service",
 				"com.ffwb.aop",
-				"com.ffwb.filter"})
+				"com.ffwb.filter",
+				"com.ffwb.utils"})
 @ImportResource("classpath:extra-beans.xml")
 @EnableSpringDataWebSupport
 @SpringBootApplication

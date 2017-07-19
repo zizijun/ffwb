@@ -3,6 +3,7 @@ package com.ffwb.service.impl;
 import com.ffwb.dao.AnswerDao;
 import com.ffwb.dao.ExamDao;
 import com.ffwb.entity.Answer;
+import com.ffwb.entity.Exam;
 import com.ffwb.service.AnswerService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,5 +49,11 @@ public class AnswerServiceImpl implements AnswerService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public List<Answer> getAnswersByExam (Exam exam) {
+        List<Answer> answers = answerDao.findByExamAndAlive(exam, 1);
+        return answers;
     }
 }

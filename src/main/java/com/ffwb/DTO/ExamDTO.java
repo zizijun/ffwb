@@ -5,7 +5,6 @@ package com.ffwb.DTO;
  */
 public class ExamDTO {
     private long examId;
-    private long userId;
     private int totalScore;
 
     public long getExamId() {
@@ -14,14 +13,6 @@ public class ExamDTO {
 
     public void setExamId(long examId) {
         this.examId = examId;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
     }
 
     public int getTotalScore() {

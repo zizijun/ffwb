@@ -42,7 +42,7 @@
 * 参数：
 
   ```json
-  RequestParam: userId,examId
+  RequestParam: examId, totalScore
   ```
 
 * 返回：
@@ -50,9 +50,21 @@
   ```json
   {
    "code": 200,
-   "data": [
+   "data": {
+     "id":1,
+     "name":"试卷1",
+     "totalTime":60,
+     "mode":1,
+     "costTime":-1,
+     "totalScore":-1,
+     "grade": -1,
+     "userId": 1,
+     "startTime":"",
+     "endTime":"",
+     "alive": 1,
+     "questions": [
        {
-         "id": 7,
+         "id": 7,   // 这条属性在本接口中是无效的
          "description": "下列哪一个是合法的标识符：",
          "type": "选择题",
          "label": "java",
@@ -73,48 +85,17 @@
            "B": "+viod",
            "C": "-5",
            "D": "_black"
-         }
+         },
+         "answerId":1    // 记录answer的id，用于添加解答
        }
        ...
      ]
+   }
   }
   ```
 
 
-### 获取一场考试信息
 
-* URL /api/exam/one
-
-* Method: GET
-
-* 参数
-
-  ```
-  RequestParam: userId,examId（返回对应的考试的基本信息）
-  ```
-
-* 返回
-
-  ```json
-  {
-    "code":200,
-    "data":{
-      "id":1,
-      "name":"试卷1",
-      "totalTime":60,
-      "mode":1,
-      "costTime":-1,
-      "totalScore":-1,
-      "grade": -1,
-      "userId": 1,
-   	  "startTime":"",
-      "endTime":"",
-      "alive": 1
-    }
-  }
-  ```
-
-  ​
 
 ### 获取所有考试
 
@@ -278,3 +259,7 @@
     }
   }
   ```
+
+
+
+    ​

@@ -51,7 +51,10 @@ public class Paper {
     }
 
     public Paper (int size) {
-        questions = new ArrayList<>(size);
+        questions = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            questions.add(new Question());
+        }
     }
 
     public int getTotalScore () {

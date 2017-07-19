@@ -115,9 +115,10 @@ public class ExamController extends ApiController{
      */
     @RequestMapping(value = "/answer/add", method = RequestMethod.POST)
     @ResponseBody
-    public ServiceResult resolve (@RequestBody Answer answer) throws Exception {
-        Answer ret = answerService.updateAnswer(answer); // ret 为空是表示不存在
-        return ServiceResult.success(ret);
+    public ServiceResult resolve (@RequestBody List<Answer> answers) throws Exception {
+        int count = answerService.updateAnswers(answers); // ret 为空是表示不存在
+        String str = "成功提交了" + count + "条回答,失败" + (answers.size() - count) + "条。" ;
+        return ServiceResult.success(str);
     }
 
     /**
@@ -128,6 +129,7 @@ public class ExamController extends ApiController{
     public ServiceResult finishExam (@RequestBody Exam exam) throws Exception {
         checkParameter(exam!=null, "exam is null");
         exam = examService.finishExam(exam);
+        // TODO 批改
         return ServiceResult.success(exam);
     }
 

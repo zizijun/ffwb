@@ -10,7 +10,9 @@ import java.util.List;
  */
 public interface AnswerService {
     Answer addAnswer (Answer answer);
-    Answer updateAnswer(Answer answer);
+    Answer updateAnswer (Answer answer);
+
+    int updateAnswers(List<Answer> answer);
     boolean deleteAnswer(Answer answer);
 
     List<Answer> getAnswersByExam (Exam exam);

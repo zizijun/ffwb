@@ -5,10 +5,7 @@ import com.ffwb.model.ServiceResult;
 import com.ffwb.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -55,7 +52,7 @@ public class TagController extends ApiController{
      */
     @RequestMapping(value="/tag/init",method=RequestMethod.POST)
     @ResponseBody
-    public ServiceResult initTags(@RequestBody String category){
+    public ServiceResult initTags(@RequestParam(value="category") String category){
         checkParameter(category!=null,"没有选择标签初始化的类别（如java,front-end）");
         int res=tagService.addTagByCategory(category);
         if(res==0)

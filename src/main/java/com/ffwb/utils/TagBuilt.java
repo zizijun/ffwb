@@ -37,24 +37,34 @@ public class TagBuilt {
     static String[] J2EE={"j2ee","servlet","jsp","web","ejb","jdbc","jndi","rmi","request","response","remotemethodinvocation","webservice","jms","jta","jts","mail","javamail"};
 
     //web前端相关font-end
-    static String[] frontEnd={"HTML","CSS","javascript","jQuery","浏览器兼容性","相应式布局","web安全",
-    "性能优化","模块定义","插件","node","http标准","ECMAScript","设计模式","OO"};//还有其他待补充
+    static String[] frontEnd={"HTML","CSS","javascript","jQuery","浏览器兼容性","响应式布局","web安全",
+    "性能","模块定义","插件","nodejs","http标准","ECMAScript","设计模式","OO"};//还有其他待补充
 
-    static String[] htmlAbout={};
-    static String[] cssAbout={};
-    static String[] jsAbout={};
-    static String[] jquery={"jquery",""};
-    static String[] browserCompatibility={};
-    static String[] relativeLayout={};
-    static String[] security={};
-    static String[] performance={};
-    static String[] module={};
-    static String[] plugIn={};
-    static String[] nodejs={};
-    static String[] httpAbout={};
-    static String[] ECMAScript={};
-    static String[] designPattern={};
-    static String[] feOO={};
+    static String[] htmlAbout={"html","header","aside","nav","section","article","footer","doctype","head","title","base","link","meta",
+    "style","body","h1","h2","h3","h4","h5","h6","hggroup","address","<p>","<hr>","<br>",
+    "<pre>","<ol>","<ul>","<li>","<dl>","<dt>","<dd>","figure","figcaption","<div>","<a>",
+    "small","strong","var","img","iframe","embed","param","video","audio","source","cavas",
+    "area","table","caption","colgroup","tbody","thread","tfoot","<tr>","<td>","<th>","form","label",
+    "button","select","datalist","optgroup","option","textarea","keygen","onblur","hidden","onabort",
+    "oncanplay","onclick","onfocus","onerror","onmouse"};
+    static String[] cssAbout={"css","style","div","text","align","size","font","color","center","margin","background",
+    "repeat","position","attachment","decoration","transform","active","hover","visited","link","边距","边框",
+    "padding","border","height","width","outline","overflow","float","first-child","lang","伪类","伪元素","selector",
+            "pseudo-element","选择器","样式","边框","浮动"};
+    static String[] jsAbout={"javascript","js","jquery","ajax","var","程序","script","onmouse","websocket","flash"};
+    static String[] jquery={"jquery"};
+    static String[] browserCompatibility={"兼容性","hack","火狐","firefox","opera","safari","chrome","ie5","ie6","ie7","ie8","ie9"};
+    static String[] responsiveLayout={"响应式","弹性","手机"};
+    static String[] security={"安全","xss","攻击","防御","防范","csrf","验证","加密","公钥","私钥","劫持","注入","钓鱼"};
+    static String[] performance={"性能","缓存"};//属性能够！
+    static String[] module={"模块","amd","cmd","commonjs","requirejs","seajs",""};
+    static String[] plugIn={"插件","grunt","qunit","gulp","proui"};
+    static String[] nodejs={"node"};
+    static String[] httpAbout={"http"};
+    static String[] ECMAScript={"ecmascript"};
+    static String[] designPattern={"设计模式","模式","backbone","单例模式","单体模式","工厂模式","同步模式","异步模式","异步","同步",
+    "设计原则","发布","订阅","策略","中介者"};
+    static String[] feOO={"oo","面向对象","封装","继承","多态",""};
 
     //获取所有tag
     public static String[] getTagsByCategory(String category){
@@ -197,6 +207,97 @@ public class TagBuilt {
         for(String s:J2EE){
             if(str.toLowerCase().indexOf(s)>0){
                 res.add("J2EE");
+                break;
+            }
+        }
+        //web前端相关的判断
+        for(String s:htmlAbout){
+            if(str.toLowerCase().indexOf(s)>0) {
+                res.add("HTML");
+                break;
+            }
+        }
+        for(String s:cssAbout){
+            if(str.toLowerCase().indexOf(s)>0) {
+                res.add("CSS");
+                break;
+            }
+        }
+        for(String s:jsAbout){
+            if(str.toLowerCase().indexOf(s)>0) {
+                res.add("javascript");
+                break;
+            }
+        }
+        for(String s:jquery){
+            if(str.toLowerCase().indexOf(s)>0) {
+                res.add("jQuery");
+                break;
+            }
+        }
+        for(String s:browserCompatibility){
+            if(str.toLowerCase().indexOf(s)>0) {
+                res.add("浏览器兼容性");
+                break;
+            }
+        }
+        for(String s:responsiveLayout){
+            if(str.toLowerCase().indexOf(s)>0) {
+                res.add("响应式布局");
+                break;
+            }
+        }
+        for(String s:security){
+            if(str.toLowerCase().indexOf(s)>0) {
+                res.add("web安全");
+                break;
+            }
+        }
+        for(String s:performance){
+            if(str.toLowerCase().indexOf(s)>0) {
+                res.add("性能");
+                break;
+            }
+        }
+        for(String s:module){
+            if(str.toLowerCase().indexOf(s)>0) {
+                res.add("模块定义");
+                break;
+            }
+        }
+        for(String s:plugIn){
+            if(str.toLowerCase().indexOf(s)>0) {
+                res.add("插件");
+                break;
+            }
+        }
+        for(String s:nodejs){
+            if(str.toLowerCase().indexOf(s)>0) {
+                res.add("nodejs");
+                break;
+            }
+        }
+        for(String s:httpAbout){
+            if(str.toLowerCase().indexOf(s)>0) {
+                res.add("http标准");
+                break;
+            }
+        }
+        for(String s:ECMAScript){
+            if(str.toLowerCase().indexOf(s)>0) {
+                res.add("ECMAScript");
+                break;
+            }
+        }
+        for(String s:designPattern){
+            if(str.toLowerCase().indexOf(s)>0) {
+                res.add("设计模式");
+                break;
+            }
+        }
+        for(String s:feOO){
+            if(str.toLowerCase().indexOf(s)>0) {
+                res.add("OO");
                 break;
             }
         }

@@ -167,25 +167,13 @@ public class QuestionServiceImpl implements QuestionService {
                 question.setType(1);
                 question.setDifficulty(3.0);
                 question.setScore(2);
-
-                //处理关于tag标签
-                String desAndOp=description+tmpOption;
-                Set<String> tmpTag= TagBuilt.isWhat(desAndOp);
-                Set<Tag> theTags=new HashSet<>();
-                for(String s:tmpTag){
-//                    Tag tag=new Tag();
-//                    tag.setContent(s);
-//                    tag.setAlive(1);
-                    Tag tag=tagDao.findByContentAndAlive(s,1);
-                    theTags.add(tag);
-                }
-                question.setTags(theTags);
                 questionDao.save(question);
                 questions.add(question);
                 while (!(lineStr = br.readLine()).equals("纠错")) {
 
                 }
 
+                String tmpSolution="";
                 if(!((lineStr=br.readLine()).substring(0,6).equals("可能的解答0"))){
                     String analysis="";
                     analysis+=lineStr;
@@ -205,6 +193,7 @@ public class QuestionServiceImpl implements QuestionService {
                         a.setQuestion(question);
                         analysisDao.save(a);
                     }
+                    tmpSolution+=analysis;
                     analysis="";
                     if(!(lineStr.equals("解答结束"))&&(!(lineStr.substring(0,6).equals("可能的解答0")))){
                         analysis+=lineStr;
@@ -225,6 +214,17 @@ public class QuestionServiceImpl implements QuestionService {
                             analysisDao.save(b);
                         }
                     }
+                    tmpSolution+=analysis;
+                    //处理关于tag标签：包含题干、选项和解答
+                    String desAndOp=description+tmpOption+tmpSolution;
+                    Set<String> tmpTag= TagBuilt.isWhat(desAndOp);
+                    Set<Tag> theTags=new HashSet<>();
+                    for(String s:tmpTag){
+                        Tag tag=tagDao.findByContentAndAlive(s,1);
+                        theTags.add(tag);
+                    }
+                    question.setTags(theTags);
+                    questionDao.save(question);
                 }
             }
         }catch(NullPointerException e){

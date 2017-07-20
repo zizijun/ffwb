@@ -134,4 +134,16 @@ public class QuestionController extends ApiController{
         int time=questionService.deleteQuestions(dtolist);
         return ServiceResult.success("成功删除"+time +"个问题,失败"+(dtolist.size()-time)+"次");
     }
+
+    /**
+     * 转化题目答案
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value="/questions/convert",method=RequestMethod.PUT)
+    @ResponseBody
+    public ServiceResult convertQuestion()throws Exception{
+        questionService.convertSolution();
+        return ServiceResult.success(null);
+    }
 }

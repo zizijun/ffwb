@@ -4,13 +4,18 @@ import com.ffwb.dao.AnswerDao;
 import com.ffwb.dao.ExamDao;
 import com.ffwb.entity.Answer;
 import com.ffwb.entity.Exam;
+import com.ffwb.entity.Question;
+import com.ffwb.hanlp.HanLP;
+import com.ffwb.hanlp.dictionary.CustomDictionary;
+import com.ffwb.hanlp.seg.common.Term;
 import com.ffwb.service.AnswerService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 
 /**
@@ -22,7 +27,7 @@ public class AnswerServiceImpl implements AnswerService {
     AnswerDao answerDao;
 
     protected final Log logger = LogFactory.getLog(getClass());
-
+    private  String keywordDictionaryPath = "data/dictionary/keyword/keyword.txt";
     @Override
     public Answer addAnswer (Answer answer) {
         Answer temp = answerDao.findByExamAndQuestionAndAlive(answer.getExam(), answer.getQuestion(), answer.getAlive());
@@ -71,5 +76,83 @@ public class AnswerServiceImpl implements AnswerService {
     public List<Answer> getAnswersByExam (Exam exam) {
         List<Answer> answers = answerDao.findByExamAndAlive(exam, 1);
         return answers;
+    }
+
+    @Override
+    public int judgeAnswers(Answer answer) throws IOException {
+        Question question = answer.getQuestion();
+        int score =0;
+        if(question.getType() ==1){ //选择题
+            String[] solutions = question.getSolution().split(" ");
+            String[] answers = answer.getAnswer().split(" ");
+            if (solutions.length == answers.length){
+                boolean isRight = true;
+                for (String str : solutions){
+                    if(!Arrays.asList(answers).contains(str)){
+                        isRight = false;
+                    }
+                }
+                if (isRight){
+                    score = question.getScore();
+                }
+            }
+
+        }
+        if (question.getType() == 3){//判断题
+
+        }
+        if (question.getType() == 4){//简答题
+            List<String> keywords = getKeywords();
+            for (String keyword: keywords) {
+                CustomDictionary.add(keyword);
+            }
+            String solution = question.getSolution();
+            String answerContent = answer.getAnswer();
+
+            CustomDictionary.add("封装");
+            CustomDictionary.add("继承");
+            CustomDictionary.add("多态");
+
+            //分词
+            List<Term> solutionTerms = HanLP.segment(solution);
+            List<Term> answerTerms = HanLP.segment(answerContent);
+            Set<String> solutionKeywords = new HashSet<>();
+            Set<String> answerKeywords = new HashSet<>();
+
+            for (Term term: solutionTerms){//获取答案中关键词个数
+                if (keywords.contains(term.word)){
+                    solutionKeywords.add(term.word);
+                }
+            }
+            for (Term term: answerTerms){//获取解答中关键词个数
+                if (keywords.contains(term.word)){
+                    answerKeywords.add(term.word);
+                }
+            }
+             score = (int)Math.round(question.getScore() * (answerKeywords.size())/(solutionKeywords.size() *1.0));
+            answer.setScore(score);
+            answerDao.save(answer);
+
+        }
+        answer.setScore(score);
+        answerDao.save(answer);
+        return score;
+        //return 0;
+
+    }
+
+    private List<String> getKeywords() throws IOException {
+        List<String> keywords = new ArrayList<>();
+
+        File input = new File(keywordDictionaryPath);
+        InputStream is = new FileInputStream(input);
+        InputStreamReader isr = new InputStreamReader(is);
+        BufferedReader br = new BufferedReader(isr);
+        StringBuffer sb = new StringBuffer();
+        String temp = null;
+        while((temp = br.readLine()) != null) {
+            keywords.add(temp);
+        }
+        return keywords;
     }
 }

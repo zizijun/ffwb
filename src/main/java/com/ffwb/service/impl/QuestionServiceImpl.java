@@ -3,6 +3,11 @@ package com.ffwb.service.impl;
 import com.ffwb.DTO.QuestionDTO;
 import com.ffwb.dao.*;
 import com.ffwb.entity.*;
+import com.ffwb.hanlp.HanLP;
+import com.ffwb.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
+import com.ffwb.hanlp.dictionary.CoreDictionary;
+import com.ffwb.hanlp.dictionary.CustomDictionary;
+import com.ffwb.hanlp.seg.common.Term;
 import com.ffwb.model.PageListModel;
 import com.ffwb.service.QuestionService;
 import com.ffwb.utils.ExcelReader;
@@ -44,6 +49,8 @@ public class QuestionServiceImpl implements QuestionService {
     private AnalysisDao analysisDao;
     @Autowired
     private UserDao userDao;
+
+
     /**
      * 上传试卷 试题
      * @param multipartFile
@@ -438,5 +445,23 @@ public class QuestionServiceImpl implements QuestionService {
         }
         return question;
     }
+
+    @Override
+    public void convertSolution(){
+        List<Question> questions = questionDao.findAll();
+        for (Question question : questions){
+            String solution = question.getSolution().split(":")[1];
+            //String solution = "正确答案:ABCD";
+            //List<String> solutionList = new ArrayList<String>();
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < solution.length(); i++){
+                sb.append(solution.substring(i, i+1)).append(" ");
+            }
+            question.setSolution(sb.substring(0, sb.length()-1));
+            questionDao.save(question);
+        }
+    }
+
+
 
 }

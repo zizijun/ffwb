@@ -66,7 +66,7 @@ public class ExamController extends ApiController{
         paperDTO.setExam(exam);
 
         List<Answer> answers = answerService.getAnswersByExam(exam);
-        if (answers != null) {
+        if (answers != null && answers.size() != 0) {
             List<Question> questions = new ArrayList<>();
             for (Answer answer : answers) {
                 questions.add(answer.getQuestion());
@@ -144,6 +144,7 @@ public class ExamController extends ApiController{
         for (Question question :questions){
             QuestionDTO dto = new QuestionDTO();
             dto.setDescription(question.getDescription());
+            dto.setId(question.getId());
             dto.setSolution(question.getSolution());
             dto.setType(question.getType());
             dto.setLabel(question.getLabel());

@@ -49,7 +49,7 @@
 
   ```json
   {
-    "examId" : 3
+    "id" : 3
   }
 
   ```
@@ -193,7 +193,6 @@
   {
     "id":1,
     "name":"试卷1",
-    "totalTime":60,
     "costTime":55,
     "userId":1
   }

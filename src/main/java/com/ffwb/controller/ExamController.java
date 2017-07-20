@@ -130,6 +130,7 @@ public class ExamController extends ApiController{
         checkParameter(exam!=null, "exam is null");
         exam = examService.finishExam(exam);
         // TODO 批改
+        exam = examService.checkAnswers(exam);
         return ServiceResult.success(exam);
     }
 

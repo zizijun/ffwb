@@ -1,8 +1,10 @@
 package com.ffwb.service.impl;
 
+import com.ffwb.dao.AnswerDao;
 import com.ffwb.dao.ExamDao;
 import com.ffwb.dao.UserDao;
 import com.ffwb.entity.*;
+import com.ffwb.service.AnswerService;
 import com.ffwb.service.ExamService;
 import com.ffwb.service.TagService;
 import com.ffwb.utils.GeneticAlgorithm.ExamRule;
@@ -14,6 +16,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,10 +35,16 @@ public class ExamServiceImpl implements ExamService {
     private UserDao userDao;
 
     @Autowired
+    private AnswerDao answerDao;
+
+    @Autowired
     private TagService tagService;
 
     @Autowired
     private Population population;
+
+    @Autowired
+    private AnswerService answerService;
 
     protected final Log logger = LogFactory.getLog(getClass());
 
@@ -74,6 +83,18 @@ public class ExamServiceImpl implements ExamService {
         Date d = df.parse(date);
         exam.setEndTime(d);
         exam.setCostTime(costTime);
+        exam = examDao.save(exam);
+        return exam;
+    }
+
+    @Override
+    public Exam checkAnswers(Exam exam) throws IOException {
+        List<Answer> answerList = answerDao.findByExamAndAlive(exam, 1);
+        int totalPoint = 0;
+        for (Answer answer : answerList){
+            totalPoint+=answerService.judgeAnswers(answer);
+        }
+        exam.setGrade(totalPoint);
         exam = examDao.save(exam);
         return exam;
     }

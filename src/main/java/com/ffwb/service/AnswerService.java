@@ -3,6 +3,7 @@ package com.ffwb.service;
 import com.ffwb.entity.Answer;
 import com.ffwb.entity.Exam;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -16,4 +17,5 @@ public interface AnswerService {
     boolean deleteAnswer(Answer answer);
 
     List<Answer> getAnswersByExam (Exam exam);
+    int judgeAnswers(Answer answer) throws IOException;
 }

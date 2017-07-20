@@ -1,10 +1,10 @@
 package com.ffwb.service;
 
-import com.ffwb.entity.Answer;
 import com.ffwb.entity.Exam;
 import com.ffwb.entity.Question;
 import com.ffwb.entity.User;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 
@@ -23,4 +23,6 @@ public interface ExamService {
     Exam updateExam (Exam exam);
 
     Exam finishExam(Exam exam) throws ParseException;
+
+    Exam checkAnswers(Exam exam) throws IOException;
 }

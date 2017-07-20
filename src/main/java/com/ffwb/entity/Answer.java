@@ -48,6 +48,9 @@ public class Answer {
     @Column
     private boolean isRight;
 
+    @Column
+    private int score;
+
     /**
      *
      */
@@ -108,5 +111,13 @@ public class Answer {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }

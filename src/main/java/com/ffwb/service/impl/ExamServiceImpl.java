@@ -61,10 +61,7 @@ public class ExamServiceImpl implements ExamService {
         if (examDao.findByUserAndName(exam.getUser(), exam.getName()) != null) {
             return newExam;
         }
-        exam.setTotalTime(-1);
-        exam.setCostTime(-1);
-        exam.setGrade(-1);
-        exam.setTotalScore(-1);
+
         exam.setAlive(1);
         return examDao.save(exam);
     }

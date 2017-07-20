@@ -32,6 +32,8 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by jinchuyang on 2017/6/22.
@@ -127,15 +129,34 @@ public class QuestionServiceImpl implements QuestionService {
                 Question question = new Question();
                 //if(lineStr.substring(0,4).equals("题目描述")) {
                 String description = "";
+                String pattern="\\d+";
+                Pattern r=Pattern.compile(pattern);
+                Matcher m=r.matcher(lineStr);
+                if(m.matches()){
+                    lineStr="";
+                }
+                else {
+                    lineStr += "\n";
+                }
                 description += lineStr;
                 while ((lineStr = br.readLine()) != null) {
                     if (lineStr.length() > 4 && ((lineStr.substring(0, 4).equals("正确答案"))))
                         break;
+                    if(lineStr.length()>=4&&(lineStr.substring(0,4).equals("你的答案")))
+                        break;
+                    Matcher mm=r.matcher(lineStr);
+
+                    if(mm.matches()){
+                        lineStr="";
+                    }else {
+                        lineStr += "\n";
+                    }
                     description += lineStr;
                 }
 
                 question.setDescription(description);
-
+                //question.setLabel("java");
+                question.setLabel("web前端");
                 String[] tmp = lineStr.split(" ");
                 String solution = "";
                 for (String s : tmp) {
@@ -175,24 +196,26 @@ public class QuestionServiceImpl implements QuestionService {
                 question.setDifficulty(3.0);
                 question.setScore(2);
                 questionDao.save(question);
-                questions.add(question);
+
                 while (!(lineStr = br.readLine()).equals("纠错")) {
 
                 }
 
-                String tmpSolution="";
+                String tmpSolution=null;
                 if(!((lineStr=br.readLine()).substring(0,6).equals("可能的解答0"))){
                     String analysis="";
+                    lineStr+="\n";
                     analysis+=lineStr;
                     while((lineStr=br.readLine())!=null){
                         if(lineStr.length()>5&&lineStr.substring(0,5).equals("可能的解答"))
                             break;
+                        lineStr+="\n";
                         analysis+=lineStr;
                     }
                     if(!(analysis.substring(7).equals(""))) {
                         Analysis a = new Analysis();
                         Random rand=new Random();
-                        long userId=rand.nextInt(8)+1;//产生1-8之间的随机数作为用户ID
+                        long userId=rand.nextInt(8)+9;//产生1-8之间的随机数作为用户ID（+1）或者产生9-16的随机数
                         a.setUser(userDao.findOne(userId));
                         a.setAlive(1);
                         a.setContent(analysis.substring(7));
@@ -201,22 +224,25 @@ public class QuestionServiceImpl implements QuestionService {
                         analysisDao.save(a);
                     }
                     tmpSolution+=analysis;
-                    analysis="";
+                    analysis=null;
                     if(!(lineStr.equals("解答结束"))&&(!(lineStr.substring(0,6).equals("可能的解答0")))){
+                        lineStr+="\n";
                         analysis+=lineStr;
                         while((lineStr=br.readLine())!=null){
-                            if(!(lineStr.equals("解答结束")))
-                                analysis+=lineStr;
+                            if(!(lineStr.equals("解答结束"))) {
+                                lineStr+="\n";
+                                analysis += lineStr;
+                            }
                             else break;
                         }
-                        if(!(analysis.substring(7).equals(""))) {
+                        if(!(analysis.substring(11).equals(""))) {
                             Analysis b = new Analysis();
                             Random rand=new Random();
-                            long userId=rand.nextInt(8)+1;
+                            long userId=rand.nextInt(8)+9;
                             b.setUser(userDao.findOne(userId));
                             b.setQuestion(question);
                             b.setCreatedTime(new Date());
-                            b.setContent(analysis.substring(7));
+                            b.setContent(analysis.substring(11));
                             b.setAlive(1);
                             analysisDao.save(b);
                         }
@@ -225,18 +251,27 @@ public class QuestionServiceImpl implements QuestionService {
                     //处理关于tag标签：包含题干、选项和解答
                     String desAndOp=description+tmpOption+tmpSolution;
                     Set<String> tmpTag= TagBuilt.isWhat(desAndOp);
-                    Set<Tag> theTags=new HashSet<>();
-                    for(String s:tmpTag){
-                        Tag tag=tagDao.findByContentAndAlive(s,1);
-                        theTags.add(tag);
+                    if(null!=tmpTag) {
+                        Set<Tag> theTags = new HashSet<>();
+                        for (String s : tmpTag) {
+                            Tag tag = tagDao.findByContentAndAlive(s, 1);
+                            theTags.add(tag);
+                        }
+                        question.setTags(theTags);
+                        questionDao.save(question);
+                        questions.add(question);
+                    }else{
+                        question.setAlive(0);
+                        questionDao.save(question);
                     }
-                    question.setTags(theTags);
-                    questionDao.save(question);
                 }
             }
         }catch(NullPointerException e){
-
-        }finally {
+            e.printStackTrace();
+            System.out.print("dksfjd");
+        }catch(Exception ee){
+            ee.printStackTrace();
+        }finally{
             return questions.size();
         }
     }

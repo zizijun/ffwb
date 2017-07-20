@@ -76,11 +76,12 @@ public class TagBuilt {
     }
 
     public static Set<String> isWhat(String str){
-
+        if(str==null)
+            return null;
         Set<String> res=new HashSet<>();
         for(String s:JVM){
             if(str.toLowerCase().indexOf(s)>0) {
-                res.add("JVM");
+                res.add("JVM相关");
                 break;
             }
         }

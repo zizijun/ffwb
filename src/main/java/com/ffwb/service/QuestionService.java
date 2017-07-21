@@ -1,5 +1,6 @@
 package com.ffwb.service;
 
+import com.ffwb.DTO.AnswerDTO;
 import com.ffwb.DTO.QuestionDTO;
 import com.ffwb.entity.Question;
 import com.ffwb.entity.Tag;
@@ -31,4 +32,6 @@ public interface QuestionService {
     void convertSolution();
 
     int tagQuestion(List<QuestionDTO> dtoList);
+
+    AnswerDTO getAnsAndSol(Long answerId);
 }

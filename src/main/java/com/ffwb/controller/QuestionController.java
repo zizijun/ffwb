@@ -1,5 +1,6 @@
 package com.ffwb.controller;
 
+import com.ffwb.DTO.AnswerDTO;
 import com.ffwb.DTO.QuestionDTO;
 import com.ffwb.entity.Manager;
 import com.ffwb.entity.Question;
@@ -162,5 +163,19 @@ public class QuestionController extends ApiController{
             return ServiceResult.fail("没有成功添加标签，可能是问题不包含关键词");
         else return ServiceResult.success("成功添加"+count+"条问题的标签");
 
+    }
+
+    /**
+     * 得到答案及解答
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value="/question/analysis",method=RequestMethod.GET)
+    @ResponseBody
+    public ServiceResult getSolutions(@RequestParam (value = "answerId",defaultValue = "-1")Long answerId)throws Exception{
+        AnswerDTO answerDTO=questionService.getAnsAndSol(answerId);
+        if(answerDTO==null)
+            return ServiceResult.fail("没有相关答案");
+        else return ServiceResult.success(answerDTO);
     }
 }

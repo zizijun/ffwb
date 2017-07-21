@@ -29,4 +29,6 @@ public interface QuestionService {
     List<Question> getQuestionByTag(int type, List<Tag> tags);
 
     void convertSolution();
+
+    void addJudgeQuestion() throws IOException;
 }

@@ -3,20 +3,10 @@ package com.ffwb.service.impl;
 import com.ffwb.DTO.QuestionDTO;
 import com.ffwb.dao.*;
 import com.ffwb.entity.*;
-import com.ffwb.hanlp.HanLP;
-import com.ffwb.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
-import com.ffwb.hanlp.dictionary.CoreDictionary;
-import com.ffwb.hanlp.dictionary.CustomDictionary;
-import com.ffwb.hanlp.seg.common.Term;
 import com.ffwb.model.PageListModel;
 import com.ffwb.service.QuestionService;
-import com.ffwb.utils.ExcelReader;
 import com.ffwb.utils.JsonType;
 import com.ffwb.utils.TagBuilt;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -50,13 +40,13 @@ public class QuestionServiceImpl implements QuestionService {
     @Autowired
     private UserDao userDao;
 
-
-    /**
-     * 上传试卷 试题
-     * @param multipartFile
-     * @param managerId
-     * @return
-     */
+    private  String judgeQuestionPath = "data/dictionary/judgeQuestion.txt";
+//    /**
+//     * 上传试卷 试题
+//     * @param multipartFile
+//     * @param managerId
+//     * @return
+//     */
 //    @Override
 //    public int upload(MultipartFile multipartFile, Long managerId) throws IOException {
 //        Manager manager = managerDao.findOne(managerId);
@@ -462,6 +452,31 @@ public class QuestionServiceImpl implements QuestionService {
         }
     }
 
+    @Override
+    public void addJudgeQuestion() throws IOException {
+        File input = new File(judgeQuestionPath);
+        InputStream is = new FileInputStream(input);
+        InputStreamReader isr = new InputStreamReader(is);
+        BufferedReader br = new BufferedReader(isr);
+        //StringBuffer sb = new StringBuffer();
+        String temp;
+        while((temp = br.readLine()) != null) {
+            if(temp.equals("")){
+                continue;
+            }
+            int index = temp.indexOf("、");
+            String description = temp.substring(index+1, temp.length()-3);
 
+            Question question = new Question();
+            question.setDescription(description);
+            question.setSolution(temp.substring(temp.length()-2, temp.length()-1));
+            question.setManager(managerDao.findOne(1l));
+            question.setAlive(1);
+            question.setDifficulty(3);
+            question.setScore(1);
+            question.setType(2);
+            questionDao.save(question);
+        }
+    }
 
 }

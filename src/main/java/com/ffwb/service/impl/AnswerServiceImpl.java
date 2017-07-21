@@ -148,8 +148,8 @@ public class AnswerServiceImpl implements AnswerService {
         InputStream is = new FileInputStream(input);
         InputStreamReader isr = new InputStreamReader(is);
         BufferedReader br = new BufferedReader(isr);
-        StringBuffer sb = new StringBuffer();
-        String temp = null;
+        //StringBuffer sb = new StringBuffer();
+        String temp;
         while((temp = br.readLine()) != null) {
             keywords.add(temp);
         }

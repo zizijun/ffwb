@@ -249,26 +249,41 @@
 
 ### 查看考题解析
 
-* URL /api/analysis
+* URL /api/question/analysis
 
 * Method: GET
 
 * 参数
 
   ```
-  RequestParam: questionId,userId
+  RequestParam:answerId
   ```
 
 * 返回
 
-  ```json
+  ```
   {
     "code":200,
     "data":{
+      "answer":"这题不会",
+      [
+      {
       "id":1,
-      "content":"原因是",
-      "createdTime":"2017-07-15",
-      "alive":1
+      "question":{}//具体可以不用管
+      "user":{}//具体可以忽略
+      "content":"jvm是java虚拟机",
+      "createdTime":"2017-08-08",
+      "alive:1
+      }
+      {
+      "id":2,
+      "question":{}//具体可以不用管
+      "user":{}//具体可以忽略
+      "content":"jvm是java虚拟机",
+      "createdTime":"2017-08-08",
+      "alive:1
+      }
+      ]
     }
   }
   ```

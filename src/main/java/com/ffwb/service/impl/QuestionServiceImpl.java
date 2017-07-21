@@ -1,5 +1,6 @@
 package com.ffwb.service.impl;
 
+import com.ffwb.DTO.AnswerDTO;
 import com.ffwb.DTO.QuestionDTO;
 import com.ffwb.dao.*;
 import com.ffwb.entity.*;
@@ -41,6 +42,8 @@ public class QuestionServiceImpl implements QuestionService {
     private AnalysisDao analysisDao;
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private AnswerDao answerDao;
 
     private  String judgeQuestionPath = "data/dictionary/judgeQuestion.txt";
 //    /**
@@ -49,6 +52,15 @@ public class QuestionServiceImpl implements QuestionService {
 //     * @param managerId
 //     * @return
 //     */
+
+
+
+    /**
+     * 上传试卷 试题
+     * @param multipartFile
+     * @param managerId
+     * @return
+     */
 //    @Override
 //    public int upload(MultipartFile multipartFile, Long managerId) throws IOException {
 //        Manager manager = managerDao.findOne(managerId);
@@ -536,6 +548,7 @@ public class QuestionServiceImpl implements QuestionService {
      * tagQuestion
      * @return
      */
+    @Override
     public int tagQuestion(List<QuestionDTO> dtoList){
         int count=0;
         for(QuestionDTO d:dtoList){
@@ -559,6 +572,22 @@ public class QuestionServiceImpl implements QuestionService {
             }
         }
         return count;
+    }
+
+    /**
+     * getAnsAndSol
+     * @return
+     */
+    @Override
+    public AnswerDTO getAnsAndSol(Long answerId) {
+        Answer answer=answerDao.findByIdAndAlive(answerId,1);
+        String ans=answer.getAnswer();
+        Question question=answer.getQuestion();
+        List<Analysis> analysisList=analysisDao.findByQuestionAndAlive(question,1);
+        AnswerDTO answerDTO=new AnswerDTO();
+        answerDTO.setAnswer(ans);
+        answerDTO.setAnalysisList(analysisList);
+        return answerDTO;
     }
 
 }

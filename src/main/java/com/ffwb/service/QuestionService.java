@@ -30,5 +30,9 @@ public interface QuestionService {
 
     void convertSolution();
 
+
     void addJudgeQuestion() throws IOException;
+
+    int tagQuestion(List<QuestionDTO> dtoList);
+g
 }

@@ -22,8 +22,8 @@ public class JsonType {
             jsonStr += "\"" + key + "\":\"" + map.get(key) + "\",";
 
         }
-        //jsonStr = jsonStr.substring(1, jsonStr.length() - 2);
-        jsonStr = jsonStr.substring(0, jsonStr.length() - 2);
+        jsonStr = jsonStr.substring(1, jsonStr.length() - 2);
+        //jsonStr = jsonStr.substring(0, jsonStr.length() - 2);
         jsonStr += "}";
         return jsonStr;
 

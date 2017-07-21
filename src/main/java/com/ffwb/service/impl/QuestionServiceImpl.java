@@ -145,8 +145,8 @@ public class QuestionServiceImpl implements QuestionService {
                 }
 
                 question.setDescription(description);
-                //question.setLabel("java");
-                question.setLabel("web前端");
+                question.setLabel("java");
+                //question.setLabel("web前端");
                 String[] tmp = lineStr.split(" ");
                 String solution = "";
                 for (String s : tmp) {
@@ -205,7 +205,7 @@ public class QuestionServiceImpl implements QuestionService {
                     if(!(analysis.substring(7).equals(""))) {
                         Analysis a = new Analysis();
                         Random rand=new Random();
-                        long userId=rand.nextInt(8)+9;//产生1-8之间的随机数作为用户ID（+1）或者产生9-16的随机数
+                        long userId=rand.nextInt(8)+1;//产生1-8之间的随机数作为用户ID（+1）或者产生9-16的随机数
                         a.setUser(userDao.findOne(userId));
                         a.setAlive(1);
                         a.setContent(analysis.substring(7));
@@ -228,7 +228,7 @@ public class QuestionServiceImpl implements QuestionService {
                         if(!(analysis.substring(11).equals(""))) {
                             Analysis b = new Analysis();
                             Random rand=new Random();
-                            long userId=rand.nextInt(8)+9;
+                            long userId=rand.nextInt(8)+1;
                             b.setUser(userDao.findOne(userId));
                             b.setQuestion(question);
                             b.setCreatedTime(new Date());
@@ -258,7 +258,6 @@ public class QuestionServiceImpl implements QuestionService {
             }
         }catch(NullPointerException e){
             e.printStackTrace();
-            System.out.print("dksfjd");
         }catch(Exception ee){
             ee.printStackTrace();
         }finally{
@@ -494,6 +493,7 @@ public class QuestionServiceImpl implements QuestionService {
         }
     }
 
+
     @Override
     public void addJudgeQuestion() throws IOException {
         File input = new File(judgeQuestionPath);
@@ -529,6 +529,36 @@ public class QuestionServiceImpl implements QuestionService {
             }
             questionDao.save(question);
         }
+    }
+
+
+    /**
+     * tagQuestion
+     * @return
+     */
+    public int tagQuestion(List<QuestionDTO> dtoList){
+        int count=0;
+        for(QuestionDTO d:dtoList){
+            Question question=dto2pojo(d);
+            String description=question.getDescription();
+            String option=question.getOptionJson();
+            String tmp=description+option;
+            Set<String> tags=TagBuilt.isWhat(tmp);
+            if(null!=tags) {
+                Set<Tag> theTag=new HashSet<>();
+                for (String s : tags) {
+                    Tag tag=tagDao.findByContentAndAlive(s,1);
+                    theTag.add(tag);
+                }
+                question.setTags(theTag);
+                questionDao.save(question);
+                count++;
+            }else{
+                question.setAlive(0);//没有成功添加标签的alive设为0
+                questionDao.save(question);
+            }
+        }
+        return count;
     }
 
 }

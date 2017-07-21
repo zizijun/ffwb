@@ -235,3 +235,43 @@ RequestParam:managerId
   "data": "成功删除1个问题,失败0次"
 }
 ```
+###给问题打标签
+* URL /api/question/tag
+* Method: PUT
+* 参数:
+```
+[
+    {
+            "id": 7,
+            "description": "下列哪一个是合法的标识符：",
+            "solution": "d",
+            "type": "选择题",
+            "label": "java",
+            "tags": [
+              {
+                "id": 1,
+                "content": "基本数据类型",
+                "alive": 1
+              },
+              {
+                "id": 2,
+                "content": "引用数据类型",
+                "alive": 1
+              }
+            ],
+            "optionJson": {
+              "A": "12class",
+              "B": "+viod",
+              "C": "-5",
+              "D": "_black"
+            }
+          }
+    ]
+```
+* 返回:
+```
+{
+  "code": 200,
+  "data": "成功添加10条问题的标签"
+}
+```

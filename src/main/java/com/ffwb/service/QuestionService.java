@@ -29,4 +29,6 @@ public interface QuestionService {
     List<Question> getQuestionByTag(int type, List<Tag> tags);
 
     void convertSolution();
+
+    int tagQuestion(List<QuestionDTO> dtoList);
 }

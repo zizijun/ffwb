@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by jinchuyang on 2017/6/22.
@@ -145,5 +146,21 @@ public class QuestionController extends ApiController{
     public ServiceResult convertQuestion()throws Exception{
         questionService.convertSolution();
         return ServiceResult.success(null);
+    }
+
+    /**
+     * 给问题打标签
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value="/question/tag",method=RequestMethod.PUT)
+    @ResponseBody
+    public ServiceResult tagQuestion(@RequestBody List<QuestionDTO> dtoList)throws Exception{
+        checkParameter(dtoList!=null,"question is null");
+        int count=questionService.tagQuestion(dtoList);
+        if(count==0)
+            return ServiceResult.fail("没有成功添加标签，可能是问题不包含关键词");
+        else return ServiceResult.success("成功添加"+count+"条问题的标签");
+
     }
 }

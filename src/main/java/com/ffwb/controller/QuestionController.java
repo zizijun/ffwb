@@ -143,7 +143,19 @@ public class QuestionController extends ApiController{
     @RequestMapping(value="/questions/convert",method=RequestMethod.PUT)
     @ResponseBody
     public ServiceResult convertQuestion()throws Exception{
-        //questionService.convertSolution();
+        questionService.convertSolution();
+        //questionService.addJudgeQuestion();
+        return ServiceResult.success(null);
+    }
+
+    /**
+     * 添加判断题
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value="/questions/addJudgeQuestion",method=RequestMethod.POST)
+    @ResponseBody
+    public ServiceResult addJudgeQuestion() throws IOException {
         questionService.addJudgeQuestion();
         return ServiceResult.success(null);
     }

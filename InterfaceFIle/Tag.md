@@ -42,3 +42,18 @@ file:excel
   "data": "添加成功"
 }
 ```
+
+###初始化标签
+*URL /tag/init
+*Method: POST
+*参数：
+```
+requestParam:category（目前取值为java或者front-end两种）
+```
+*返回
+```
+{
+    "code":200,
+    "data":"成功初始化22条标签"
+}
+```

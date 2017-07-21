@@ -82,6 +82,7 @@ public class AnswerServiceImpl implements AnswerService {
     public int judgeAnswers(Answer answer) throws IOException {
         Question question = answer.getQuestion();
         int score =0;
+        boolean right = false;
         if(question.getType() ==1){ //选择题
             String[] solutions = question.getSolution().split(" ");
             String[] answers = answer.getAnswer().split(" ");
@@ -94,14 +95,18 @@ public class AnswerServiceImpl implements AnswerService {
                 }
                 if (isRight){
                     score = question.getScore();
+                    right = true;
                 }
             }
 
         }
         if (question.getType() == 3){//判断题
-
+            if(question.getSolution().equals(answer.getAnswer())){
+                score = question.getScore();
+                right = true;
+            }
         }
-        if (question.getType() == 4){//简答题
+        if (question.getType() == 5){//简答题
             List<String> keywords = getKeywords();
             for (String keyword: keywords) {
                 CustomDictionary.add(keyword);
@@ -129,12 +134,14 @@ public class AnswerServiceImpl implements AnswerService {
                     answerKeywords.add(term.word);
                 }
             }
-             score = (int)Math.round(question.getScore() * (answerKeywords.size())/(solutionKeywords.size() *1.0));
-            answer.setScore(score);
-            answerDao.save(answer);
+            score = (int)Math.round(question.getScore() * (answerKeywords.size())/(solutionKeywords.size() *1.0));
+            if (score > 0)
+                right = true;
+
 
         }
         answer.setScore(score);
+        answer.setRight(right);
         answerDao.save(answer);
         return score;
         //return 0;

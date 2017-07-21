@@ -144,6 +144,7 @@ public class ExamController extends ApiController{
         for (Question question :questions){
             QuestionDTO dto = new QuestionDTO();
             dto.setDescription(question.getDescription());
+            dto.setId(question.getId());
             dto.setSolution(question.getSolution());
             dto.setType(question.getType());
             dto.setLabel(question.getLabel());

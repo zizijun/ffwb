@@ -33,6 +33,15 @@ public class Skill {
     private double point;
 
     @Column
+    private int number;
+
+    @Column
+    private double difficult;
+
+    @Column
+    private double correct;
+
+    @Column
     private int alive;
 
     public Long getId() {
@@ -73,5 +82,29 @@ public class Skill {
 
     public void setAlive(int alive) {
         this.alive = alive;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public double getDifficult() {
+        return difficult;
+    }
+
+    public void setDifficult(double difficult) {
+        this.difficult = difficult;
+    }
+
+    public double getCorrect() {
+        return correct;
+    }
+
+    public void setCorrect(double correct) {
+        this.correct = correct;
     }
 }

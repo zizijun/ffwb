@@ -106,6 +106,8 @@ public class AnswerServiceImpl implements AnswerService {
                 right = true;
             }
         }
+        if (question.getType() == 4){//编程题
+        }
         if (question.getType() == 5){//简答题
             List<String> keywords = getKeywords();
             for (String keyword: keywords) {

@@ -22,10 +22,29 @@ public class SkillController extends ApiController{
     @Autowired
     private SkillService skillService;
 
+    /**
+     * 获取大类的技能分析
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "/skillmodel/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public ServiceResult getAll (@PathVariable(value = "id") long id){
+    public ServiceResult getBig (@PathVariable(value = "id") long id){
          List<SkillModel> skillModel = skillService.getSkillModel(id);
         return ServiceResult.success(skillModel);
+    }
+
+    @RequestMapping(value = "/skillmodel/total/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ServiceResult getAll (@PathVariable(value = "id") long id){
+        List<SkillModel> skillModel = skillService.getTotalSkillModel(id);
+        return ServiceResult.success(skillModel);
+    }
+
+    @RequestMapping(value = "/skillmodel/random", method = RequestMethod.POST)
+    @ResponseBody
+    public ServiceResult addSuiji (){
+        skillService.createRandomData();
+        return ServiceResult.success(null);
     }
 }

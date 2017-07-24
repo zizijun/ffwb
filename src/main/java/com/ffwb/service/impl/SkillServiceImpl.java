@@ -140,6 +140,68 @@ public class SkillServiceImpl implements SkillService{
         return skillModels;
     }
 
+    @Override
+    public List<SkillModel> getTotalSkillModel(long id) {
+        List<SkillModel> skillModels = new ArrayList<>();
+        User user = userDao.findByIdAndAlive(id, 1);
+        if (user == null){
+            return null;
+        }
+        List<Tag> tags = tagDao.findByAlive(1);
+        for (Tag tag : tags){
+            SkillModel skillModel = new SkillModel();
+            Set<Tag> tagSet = new HashSet<>();
+            tagSet.add(tag);
+            List<Skill> skills = skillDao.findByTagAndAlive(tag, 1);
+            boolean isMatched = false;
+            for (Skill skill : skills){
+                if (user.equals(skill.getUser())){
+                    skillModel.setValue(skill.getPoint());
+                    skillModel.setCorrect(skill.getCorrect());
+                    skillModel.setNumber(skill.getNumber());
+                    skillModel.setName(skill.getTag().getContent());
+                    skillModel.setDifficult(skill.getDifficult());
+                    isMatched = true;
+                    break;
+                }
+            }
+            if (!isMatched){
+                continue;
+            }
+            double averagePoint = getAveragePoint(skills);
+            skillModel.setAverage(averagePoint);
+            skillModels.add(skillModel);
+        }
+        return skillModels;
+    }
+
+    @Override
+    public void createRandomData() {
+        List<User> users = userDao.findByAlive(1);
+        List<Tag> tags = tagDao.findByAlive(1);
+        List<Skill> skills = new ArrayList<>();
+        int a = 1, b = 1;
+        for (User user : users){
+            for (Tag tag: tags) {
+                final long l = System.currentTimeMillis();
+                Random random = new Random(l+a*b);//指定种子数字
+                int num = random.nextInt(20);
+                Skill skill = new Skill();
+                skill.setUser(user);
+                skill.setTag(tag);
+                skill.setCorrect(random.nextDouble());
+                skill.setPoint(random.nextDouble()*3);
+                skill.setNumber(random.nextInt(100));
+                skill.setDifficult(random.nextDouble()*3);
+                skill.setAlive(1);
+                skills.add(skill);
+                a++;
+            }
+            b++;
+        }
+        skillDao.save(skills);
+    }
+
     private double getAveragePoint(List<Skill> j2eeSkills1) {
         int number = 0;
         double pointNum = 0;
@@ -203,7 +265,7 @@ public class SkillServiceImpl implements SkillService{
                     predicate.getExpressions().add(criteriaBuilder.equal(root.<User>get("user"),fUser));
                 }
                 if (fTags != null && fTags.size() != 0){
-                    predicate.getExpressions().add(criteriaBuilder.in(root.<Tag>get("tag").in(fTags)));
+                    predicate.getExpressions().add(criteriaBuilder.isTrue(root.<Tag>get("tag").in(fTags)));
                 }
 
                 return criteriaBuilder.and(predicate);
@@ -217,6 +279,7 @@ public class SkillServiceImpl implements SkillService{
         Set<Tag> tagSet = new HashSet<>();
         for(int i = 0; i < ids.length; i++){
             Tag tag = tagDao.findOne(ids[i]);
+            tagSet.add(tag);
         }
         return tagSet;
     }

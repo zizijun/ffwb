@@ -18,5 +18,6 @@ public interface SkillDao extends JpaRepository<Skill, Long>, JpaSpecificationEx
     Skill findByTagAndUserAndAlive(Tag tag, User user, int alive);
     List<Skill> findAllByAlive(int alive);
     List<Skill> findByUserAndAlive(User user, int alive);
+    List<Skill> findByTagAndAlive(Tag tag, int alive);
 
 }

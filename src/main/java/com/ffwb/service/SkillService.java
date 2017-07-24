@@ -12,4 +12,8 @@ public interface SkillService {
     void analyzeSkill();
 
     List<SkillModel> getSkillModel(Long userId);
+
+    List<SkillModel> getTotalSkillModel(long id);
+
+    void createRandomData();
 }

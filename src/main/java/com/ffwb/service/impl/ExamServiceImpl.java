@@ -98,20 +98,32 @@ public class ExamServiceImpl implements ExamService {
 
     @Override
     // TODO 组卷，目前提供一种测试的组卷内容
-    public List<Question> formPaper () {
+    public List<Question> formPaper (Exam exam) {
         List<Tag> tags = tagService.findAllAlive(1);
 
-        ExamRule rule = new ExamRule(10, 3.0, 5, 0, 0, 0, tags);
+        ExamRule rule;
 
         // 迭代计数器
         int count = 0;
         // 迭代总次数
-        int totalCount = 100;
+        int totalCount = 20;
         // 适应度期望值
         double expectation = 0.98;
 
         // 按照条件使用遗传算法组卷
-        population.init(5, rule);
+        int totalTime = exam.getTotalTime();
+        if (totalTime == 60) {
+            rule = new ExamRule(40, 3.0, 10, 10, 0, 0, tags);
+            population.init(20, rule);
+        } else if (totalTime == 90) {
+            rule = new ExamRule(60, 3.0, 15, 15, 0, 0, tags);
+            population.init(30, rule);
+        } else if (totalTime == 120) {
+            rule = new ExamRule(80, 3.0, 20, 20, 0, 0, tags);
+            population.init(40, rule);
+        } else {
+            rule = new ExamRule(120, 3.0, 30, 30, 0, 0, tags);
+        }
 
         logger.info("初次适应度: " + population.getFittest().getFitness());
 

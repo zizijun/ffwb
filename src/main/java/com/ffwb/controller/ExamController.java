@@ -3,6 +3,7 @@ package com.ffwb.controller;
 import com.ffwb.DTO.ExamDTO;
 import com.ffwb.DTO.PaperDTO;
 import com.ffwb.DTO.QuestionDTO;
+import com.ffwb.dao.ExamDao;
 import com.ffwb.entity.Answer;
 import com.ffwb.entity.Exam;
 import com.ffwb.entity.Question;
@@ -37,6 +38,9 @@ public class ExamController extends ApiController{
 
     @Autowired
     private AnswerService answerService;
+
+    @Autowired
+    private ExamDao examDao;
 
     /**
      * 创建新试卷
@@ -95,6 +99,13 @@ public class ExamController extends ApiController{
         }
 
         paperDTO.setQuestions(questionDTOs);
+
+        int totalPoint = 0;
+        for (Question question : questions){
+            totalPoint += question.getScore();
+        }
+        exam.setTotalScore(totalPoint);
+        examDao.save(exam);
 
         return ServiceResult.success(paperDTO);
     }

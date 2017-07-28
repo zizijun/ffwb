@@ -100,7 +100,7 @@ public class AnswerServiceImpl implements AnswerService {
             }
 
         }
-        if (question.getType() == 3){//判断题
+        if (question.getType() == 2){//判断题
             if(question.getSolution().equals(answer.getAnswer())){
                 score = question.getScore();
                 right = true;

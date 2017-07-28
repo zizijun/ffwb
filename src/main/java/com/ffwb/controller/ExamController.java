@@ -58,7 +58,6 @@ public class ExamController extends ApiController{
 
     /**
      * 生成试题
-     * TODO 返回的数据类型需完善
      */
     @RequestMapping(value = "/exam/generate", method = RequestMethod.POST)
     @ResponseBody
@@ -84,7 +83,7 @@ public class ExamController extends ApiController{
         }
 
         // 组卷，获取题目
-        List<Question> questions = examService.formPaper();
+        List<Question> questions = examService.formPaper(exam);
         List<QuestionDTO> questionDTOs = question2Dto(questions);
 
         // 生成对应的空的解答
@@ -105,7 +104,8 @@ public class ExamController extends ApiController{
             totalPoint += question.getScore();
         }
         exam.setTotalScore(totalPoint);
-        examDao.save(exam);
+        exam = examDao.save(exam);
+        paperDTO.setExam(exam);
 
         return ServiceResult.success(paperDTO);
     }

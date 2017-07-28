@@ -14,7 +14,7 @@ import java.util.List;
 public interface ExamService {
     Exam createExam (Exam exam);
 
-    List<Question> formPaper ();
+    List<Question> formPaper (Exam exam);
 
     Exam findExamById (long examId);
 

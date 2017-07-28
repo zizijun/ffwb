@@ -11,7 +11,8 @@
   ```json
   {
   	"name" : "exam3",
-	""totalScore" : 20,
+    "label" : "java",   // 或者web前端
+    "totalTime" : 60,   // 90 120
   	"user" : {
   		"id":1
   	}

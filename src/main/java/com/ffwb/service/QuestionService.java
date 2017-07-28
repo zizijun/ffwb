@@ -27,7 +27,7 @@ public interface QuestionService {
 
     int deleteQuestions(List<QuestionDTO> dto);
 
-    List<Question> getQuestionByTag(int type, List<Tag> tags);
+    List<Question> getQuestionByTag(int type, List<Tag> tags, String label);
 
     void convertSolution();
 

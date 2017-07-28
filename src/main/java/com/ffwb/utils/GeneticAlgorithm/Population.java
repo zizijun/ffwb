@@ -39,23 +39,23 @@ public class Population {
                 String idString = rule.getKnowledgePoints().toString();
                 // 单选题
                 if (rule.getSingleChoiceCount() > 0) {
-                    generateQuestion(1, random, rule.getSingleChoiceCount(), 2, rule.getKnowledgePoints(),
+                    generateQuestion(1, random, rule.getSingleChoiceCount(), 2, rule.getLabel(), rule.getKnowledgePoints(),
                             "单选题数量不够，组卷失败", paper);
                 }
                 // 填空题
                 if (rule.getGapFillingCount() > 0) {
-                    generateQuestion(2, random, rule.getGapFillingCount(), 2, rule.getKnowledgePoints(),
+                    generateQuestion(2, random, rule.getGapFillingCount(), 2, rule.getLabel(), rule.getKnowledgePoints(),
                             "填空题数量不够，组卷失败", paper);
                 }
 
                 // 判断题
                 if (rule.getCheckCount() > 0) {
-                    generateQuestion(3, random, rule.getCheckCount(), 2, rule.getKnowledgePoints(),
+                    generateQuestion(3, random, rule.getCheckCount(), 2, rule.getLabel(), rule.getKnowledgePoints(),
                             "判断题数量不够，组卷失败", paper);
                 }
                 // 编程题
                 if (rule.getProgrammingCount() > 0) {
-                    generateQuestion(4, random, rule.getProgrammingCount(), 15, rule.getKnowledgePoints(),
+                    generateQuestion(4, random, rule.getProgrammingCount(), 15, rule.getLabel(), rule.getKnowledgePoints(),
                             "编程题数量不够，组卷失败", paper);
                 }
             }
@@ -71,9 +71,9 @@ public class Population {
      * 初始化试题
      * TODO 如何初始化
      */
-    private void generateQuestion(int type, Random random, int questionCount, int score, List<Tag> tags,
+    private void generateQuestion(int type, Random random, int questionCount, int score, String label, List<Tag> tags,
                                   String errorMsg, Paper paper) {
-        List<Question> questions = questionService.getQuestionByTag(type, tags);
+        List<Question> questions = questionService.getQuestionByTag(type, tags, label);
         if (questions == null || questions.size() < questionCount) {
             return;
         }

@@ -110,19 +110,21 @@ public class ExamServiceImpl implements ExamService {
         // 适应度期望值
         double expectation = 0.98;
 
+        String label = exam.getLabel();
+
         // 按照条件使用遗传算法组卷
         int totalTime = exam.getTotalTime();
         if (totalTime == 60) {
-            rule = new ExamRule(40, 3.0, 10, 10, 0, 0, tags);
+            rule = new ExamRule(40, label, 3.0, 10, 10, 0, 0, tags);
             population.init(20, rule);
         } else if (totalTime == 90) {
-            rule = new ExamRule(60, 3.0, 15, 15, 0, 0, tags);
+            rule = new ExamRule(60, label, 3.0, 15, 15, 0, 0, tags);
             population.init(30, rule);
         } else if (totalTime == 120) {
-            rule = new ExamRule(80, 3.0, 20, 20, 0, 0, tags);
+            rule = new ExamRule(80, label, 3.0, 20, 20, 0, 0, tags);
             population.init(40, rule);
         } else {
-            rule = new ExamRule(120, 3.0, 30, 30, 0, 0, tags);
+            rule = new ExamRule(120, label, 3.0, 30, 30, 0, 0, tags);
         }
 
         logger.info("初次适应度: " + population.getFittest().getFitness());

@@ -99,6 +99,11 @@ public class SkillServiceImpl implements SkillService{
         }
     }
 
+    /**
+     * 获取大类的技能分析
+     * @param userId
+     * @return
+     */
     @Override
     public List<SkillModel> getSkillModel(Long userId) {
         List<SkillModel> skillModels = new ArrayList<>();
@@ -113,23 +118,25 @@ public class SkillServiceImpl implements SkillService{
         Set<Tag> jsTagSet = getTagsByIds(jsIds);
         List<Skill> j2eeSkills = getSkillsByCondition(user, j2eeTagSet);
         List<Skill> j2eeSkills1 = getSkillsByCondition(null, j2eeTagSet);
-        SkillModel j2eeModel = skillList2Model(j2eeSkills, "j2ee", j2eeSkills1);
+        SkillModel j2eeModel = skillList2Model(j2eeSkills, "j2ee", j2eeSkills1, j2eeTagSet);
+        //List<String> j2eeSonTagNames = getSonTagNames(j2eeTagSet);
+
 
         List<Skill> j2seSkills = getSkillsByCondition(user, j2seTagSet);
         List<Skill> j2seSkills1 = getSkillsByCondition(null, j2seTagSet);
-        SkillModel j2seModel = skillList2Model(j2seSkills, "j2se", j2seSkills1);
+        SkillModel j2seModel = skillList2Model(j2seSkills, "j2se", j2seSkills1, j2seTagSet);
 
         List<Skill> htmlSkills = getSkillsByCondition(user, htmlTagSet);
         List<Skill> htmlSkills1 = getSkillsByCondition(null, htmlTagSet);
-        SkillModel htmlModel = skillList2Model(htmlSkills, "html", htmlSkills1);
+        SkillModel htmlModel = skillList2Model(htmlSkills, "html", htmlSkills1, htmlTagSet);
 
         List<Skill> cssSkills = getSkillsByCondition(user, cssTagSet);
         List<Skill> cssSkills1 = getSkillsByCondition(null, cssTagSet);
-        SkillModel cssModel = skillList2Model(cssSkills, "css", cssSkills1);
+        SkillModel cssModel = skillList2Model(cssSkills, "css", cssSkills1, cssTagSet);
 
         List<Skill> jsSkills = getSkillsByCondition(user, jsTagSet);
         List<Skill> jsSkills1 = getSkillsByCondition(null, jsTagSet);
-        SkillModel jsModel = skillList2Model(jsSkills, "js", jsSkills1);
+        SkillModel jsModel = skillList2Model(jsSkills, "js", jsSkills1, jsTagSet);
 
         skillModels.add(j2eeModel);
         skillModels.add(j2seModel);
@@ -140,6 +147,11 @@ public class SkillServiceImpl implements SkillService{
         return skillModels;
     }
 
+    /**
+     * 获取子类的技能分析
+     * @param id
+     * @return
+     */
     @Override
     public List<SkillModel> getTotalSkillModel(long id) {
         List<SkillModel> skillModels = new ArrayList<>();
@@ -216,7 +228,7 @@ public class SkillServiceImpl implements SkillService{
         }
     }
 
-    private SkillModel skillList2Model(List<Skill> skills, String name, List<Skill> skills1) {
+    private SkillModel skillList2Model(List<Skill> skills, String name, List<Skill> skills1, Set<Tag> tagSet) {
         SkillModel model = new SkillModel();
         model.setName(name);
         int number = 0;
@@ -241,6 +253,8 @@ public class SkillServiceImpl implements SkillService{
         }
         double averagePoint = getAveragePoint(skills1);
         model.setAverage(averagePoint);
+        List<String> list = getSonTagNames(tagSet);
+        model.setSonTagName(list);
         return model;
     }
 
@@ -282,5 +296,16 @@ public class SkillServiceImpl implements SkillService{
             tagSet.add(tag);
         }
         return tagSet;
+    }
+
+
+    private List<String> getSonTagNames(Set<Tag> tagSet) {
+        List<String> list = new ArrayList<>();
+        for (Tag tag : tagSet){
+            if (tag!=null && tag.getContent() != null){
+                list.add(tag.getContent());
+            }
+        }
+        return list;
     }
 }

@@ -400,11 +400,11 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public List<Question> getQuestionByTag(int type, List<Tag> tags) {
+    public List<Question> getQuestionByTag(int type, List<Tag> tags, String label) {
         List<Question> questions = questionDao.findAll();
         List<Question> questionList = new ArrayList<>();
         for (Question question: questions){
-            if (question.getAlive() ==1 && question.getTags() != null && question.getType() == type ){
+            if (question.getAlive() ==1 && question.getTags() != null && question.getType() == type && question.getLabel().equals(label) ){
                 for (Tag tag : question.getTags()){
                     if (tags.contains(tag)){
                         questionList.add(question);

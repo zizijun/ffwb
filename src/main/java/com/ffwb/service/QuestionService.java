@@ -15,6 +15,8 @@ import java.util.List;
 public interface QuestionService {
     int upload(MultipartFile file, Long managerId) throws IOException;
 
+    int uploadExcel(MultipartFile multipartFile, Long managerId) throws IOException;
+
     PageListModel getAllQuestions(int pageIndex, int pageSize, String sortField, String sortOrder);
 
     PageListModel getQuestionsByConditions(String label, int type, int pageIndex, int pageSize, String sortField, String sortOrder);

@@ -1,6 +1,22 @@
 # Question
 
 ### 上传试题 试题存在excel之中
+* URL /api/question/upload/excel?managerId=1
+* Method: POST
+* 参数:
+```
+file:excel
+```
+* 返回:
+```
+{
+  "code": 200,
+  "data": "成功上传6题目"
+}
+```
+
+
+### 上传试题 试题存在txt之中
 * URL /api/question/upload?managerId=1
 * Method: POST
 * 参数:

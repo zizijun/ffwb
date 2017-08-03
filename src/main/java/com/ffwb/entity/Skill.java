@@ -3,6 +3,8 @@ package com.ffwb.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by jinchuyang on 2017/7/13.
@@ -43,6 +45,9 @@ public class Skill {
 
     @Column
     private int alive;
+
+    @ManyToMany(mappedBy = "skillSet")
+    private Set<Recruitment> recruitmentSet=new HashSet<>();
 
     public Long getId() {
         return id;
@@ -106,5 +111,13 @@ public class Skill {
 
     public void setCorrect(double correct) {
         this.correct = correct;
+    }
+
+    public Set<Recruitment> getRecruitmentSet() {
+        return recruitmentSet;
+    }
+
+    public void setRecruitmentSet(Set<Recruitment> recruitmentSet) {
+        this.recruitmentSet = recruitmentSet;
     }
 }

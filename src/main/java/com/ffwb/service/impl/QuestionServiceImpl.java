@@ -6,8 +6,13 @@ import com.ffwb.dao.*;
 import com.ffwb.entity.*;
 import com.ffwb.model.PageListModel;
 import com.ffwb.service.QuestionService;
+import com.ffwb.utils.ExcelReader;
 import com.ffwb.utils.JsonType;
 import com.ffwb.utils.TagBuilt;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -61,56 +66,56 @@ public class QuestionServiceImpl implements QuestionService {
      * @param managerId
      * @return
      */
-//    @Override
-//    public int upload(MultipartFile multipartFile, Long managerId) throws IOException {
-//        Manager manager = managerDao.findOne(managerId);
-//        if (manager == null){
-//            return -1;
-//        }
-//        List<Question> questions = new ArrayList<Question>();
-//        File file = File.createTempFile("./doc","temp");
-//        multipartFile.transferTo(file);
-//        ExcelReader excelReader = new ExcelReader(file);
-//        XSSFSheet sheet = excelReader.getWb().getSheetAt(0);
-//        //获得当前sheet的结束行
-//        int lastRowNum = sheet.getLastRowNum();
-//        for (int i = 1; i < lastRowNum; i++){
-//            Question question = new Question();
-//            question.setManager(manager);
-//            XSSFRow row = sheet.getRow(i);
-//            XSSFCell cell;
-//            cell = row.getCell(0);
-//            cell.setCellType(Cell.CELL_TYPE_STRING);
-//            //题干
-//            question.setDescription(cell.getStringCellValue());
-//            //答案
-//            cell = row.getCell(1);
-//            cell.setCellType(Cell.CELL_TYPE_STRING);
-//            question.setSolution(cell.getStringCellValue());
-//            //标签
-//            cell = row.getCell(2);
-//            cell.setCellType(Cell.CELL_TYPE_STRING);
-//            question.setType(cell.getStringCellValue());
-//            //option
-//            cell = row.getCell(3);
-//            if (cell!= null && cell.getStringCellValue() != null){
-//                Map<String, String> options = new HashMap<String, String>();
-//                for (int j = 3; j < 7;j++){
-//                    cell = row.getCell(j);
-//                    cell.setCellType(Cell.CELL_TYPE_STRING);
-//                    Character ch  = (char) (62+j);
-//                    options.put(ch.toString(),cell.getStringCellValue());
-//                }
-//
-//                question.setOptionJson(JsonType.simpleMapToJsonStr(options));
-//            }
-//            question.setAlive(1);
-//            questions.add(question);
-//            questionDao.save(question);
-//        }
-//        //questionDao.save(questions);
-//        return questions.size();
-//    }
+    @Override
+    public int uploadExcel(MultipartFile multipartFile, Long managerId) throws IOException {
+        Manager manager = managerDao.findOne(managerId);
+        if (manager == null){
+            return -1;
+        }
+        List<Question> questions = new ArrayList<Question>();
+        File file = File.createTempFile("./doc","temp");
+        multipartFile.transferTo(file);
+        ExcelReader excelReader = new ExcelReader(file);
+        XSSFSheet sheet = excelReader.getWb().getSheetAt(0);
+        //获得当前sheet的结束行
+        int lastRowNum = sheet.getLastRowNum();
+        for (int i = 1; i < lastRowNum; i++){
+            Question question = new Question();
+            question.setManager(manager);
+            XSSFRow row = sheet.getRow(i);
+            XSSFCell cell;
+            cell = row.getCell(0);
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            //题干
+            question.setDescription(cell.getStringCellValue());
+            //答案
+            cell = row.getCell(1);
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            question.setSolution(cell.getStringCellValue());
+            //标签
+            cell = row.getCell(2);
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            question.setType(cell.getStringCellValue().equals("选择题")?1:2);
+            //option
+            cell = row.getCell(3);
+            if (cell!= null && cell.getStringCellValue() != null){
+                Map<String, String> options = new HashMap<String, String>();
+                for (int j = 3; j < 7;j++){
+                    cell = row.getCell(j);
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    Character ch  = (char) (62+j);
+                    options.put(ch.toString(),cell.getStringCellValue());
+                }
+
+                question.setOptionJson(JsonType.simpleMapToJsonStr(options));
+            }
+            question.setAlive(1);
+            questions.add(question);
+            questionDao.save(question);
+        }
+        //questionDao.save(questions);
+        return questions.size();
+    }
 
 
     @Override
@@ -400,11 +405,11 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public List<Question> getQuestionByTag(int type, List<Tag> tags) {
+    public List<Question> getQuestionByTag(int type, List<Tag> tags, String label) {
         List<Question> questions = questionDao.findAll();
         List<Question> questionList = new ArrayList<>();
         for (Question question: questions){
-            if (question.getAlive() ==1 && question.getTags() != null && question.getType() == type ){
+            if (question.getAlive() ==1 && question.getTags() != null && question.getType() == type && question.getLabel().equals(label) ){
                 for (Tag tag : question.getTags()){
                     if (tags.contains(tag)){
                         questionList.add(question);

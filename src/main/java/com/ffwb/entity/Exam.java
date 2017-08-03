@@ -30,6 +30,12 @@ public class Exam {
     private int totalTime;
 
     /**
+     * 类型
+     */
+    @Column
+    private String label;
+
+    /**
      * 模式（整卷、逐题）
      */
     @Column
@@ -166,5 +172,13 @@ public class Exam {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }

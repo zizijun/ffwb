@@ -15,6 +15,8 @@ import java.util.List;
 public interface QuestionService {
     int upload(MultipartFile file, Long managerId) throws IOException;
 
+    int uploadExcel(MultipartFile multipartFile, Long managerId) throws IOException;
+
     PageListModel getAllQuestions(int pageIndex, int pageSize, String sortField, String sortOrder);
 
     PageListModel getQuestionsByConditions(String label, int type, int pageIndex, int pageSize, String sortField, String sortOrder);
@@ -27,7 +29,7 @@ public interface QuestionService {
 
     int deleteQuestions(List<QuestionDTO> dto);
 
-    List<Question> getQuestionByTag(int type, List<Tag> tags);
+    List<Question> getQuestionByTag(int type, List<Tag> tags, String label);
 
     void convertSolution();
 

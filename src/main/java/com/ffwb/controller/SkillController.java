@@ -34,6 +34,11 @@ public class SkillController extends ApiController{
         return ServiceResult.success(skillModel);
     }
 
+    /**
+     * 获取小类的技能分析
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "/skillmodel/total/{id}", method = RequestMethod.GET)
     @ResponseBody
     public ServiceResult getAll (@PathVariable(value = "id") long id){

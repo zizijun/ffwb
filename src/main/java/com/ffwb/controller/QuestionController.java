@@ -49,6 +49,28 @@ public class QuestionController extends ApiController{
     }
 
     /**
+     * 上传试题 试题存在excel之中
+     * @param file
+     * @param managerId
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = "/question/upload/excel", method = RequestMethod.POST)
+    @ResponseBody
+    public ServiceResult uploadQuestionByExcel(@RequestParam(value = "file")MultipartFile file,
+                                        @RequestParam(value = "managerId", defaultValue = "-1")Long managerId) throws IOException {
+        checkParameter(file!=null ,"file is empty");
+        checkParameter(managerId != null,"manager is empty");
+        int uploadNum = questionService.uploadExcel(file, managerId);
+        if (uploadNum > 0){
+            return ServiceResult.success("成功上传"+uploadNum+"题目");
+
+        }else {
+            return ServiceResult.fail(500,"上传失败");
+        }
+    }
+
+    /**
      * 获取所有的试题(分页操作)
      * @return
      */

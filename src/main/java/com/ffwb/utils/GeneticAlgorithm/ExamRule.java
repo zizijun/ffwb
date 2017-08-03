@@ -16,6 +16,11 @@ public class ExamRule {
     private int totalScore;
 
     /**
+     * 类型
+     */
+    private String label;
+
+    /**
      * 试卷期望难度系数
      */
     private double difficulty;
@@ -49,8 +54,9 @@ public class ExamRule {
 
     }
 
-    public ExamRule (int totalScore, double difficulty, int singleChoiceCount, int gapFillingCount, int checkCount, int programmingCount, List<Tag> knowledgePoints) {
+    public ExamRule (int totalScore, String label, double difficulty, int singleChoiceCount, int gapFillingCount, int checkCount, int programmingCount, List<Tag> knowledgePoints) {
         this.totalScore = totalScore;
+        this.label = label;
         this.difficulty = difficulty;
         this.singleChoiceCount = singleChoiceCount;
         this.gapFillingCount = gapFillingCount;
@@ -113,5 +119,13 @@ public class ExamRule {
 
     public void setKnowledgePoints(List<Tag> knowledgePoints) {
         this.knowledgePoints = knowledgePoints;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }

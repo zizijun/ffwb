@@ -102,7 +102,7 @@ public class GeneticAlgorithm {
                 // TODO 从数据库中寻找符合条件的候选题目，通过type和标签
 //                Question[] singleArray = QuestionService.getQuestionArray(type, idString.substring(1, idString.indexOf("]")));
 
-                List<Question> singleArray = questionService.getQuestionByTag(type, examRule.getKnowledgePoints());
+                List<Question> singleArray = questionService.getQuestionByTag(type, examRule.getKnowledgePoints(), examRule.getLabel());
                 child.setQuestion(i, singleArray.get((int) (Math.random() * singleArray.size() )));
             }
         }
@@ -113,7 +113,7 @@ public class GeneticAlgorithm {
                 int type = getTypeByIndex(i, examRule);
                 // TODO 寻找符合条件的候选题目，通过type和标签
 //                Question[] singleArray = QuestionService.getQuestionArray(type, idString.substring(1, idString.indexOf("]")));
-                List<Question> singleArray = questionService.getQuestionByTag(type, examRule.getKnowledgePoints());
+                List<Question> singleArray = questionService.getQuestionByTag(type, examRule.getKnowledgePoints(), examRule.getLabel());
                 child.setQuestion(i, singleArray.get((int) (Math.random() * singleArray.size() )));
             }
         }
